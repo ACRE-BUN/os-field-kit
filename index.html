@@ -1,257 +1,501 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAUNA 竹～take～ | 大分の完全個室プライベートサウナ</title>
-    <meta name="description" content="大分県大分市の完全個室フィンランド式プライベートサウナ「SAUNA 竹～take～」。和モダンな空間で、極上のととのい体験を。">
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap"
-        rel="stylesheet">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OS Anthropology — The Absence Field Kit</title>
+<meta name="description" content="10の不在に、あなたは何をするか。第一反射のクセを観察する。">
+<meta property="og:title" content="OS Anthropology — The Absence Field Kit">
+<meta property="og:description" content="10の不在に、あなたは何をするか。診断ではなく、観察のための鏡。">
+<meta property="og:type" content="website">
+<style>
+  html,body{margin:0;padding:0;background:#FBFAF7;-webkit-text-size-adjust:100%;}
+  *{box-sizing:border-box;}
+</style>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.6/babel.min.js"></script>
 </head>
-
 <body>
-    <!-- Page Transition Overlay -->
-    <div class="transition-overlay">
-        <div class="transition-block"></div>
-        <div class="transition-block"></div>
-        <div class="transition-block"></div>
-    </div>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useMemo, useRef, useEffect } = React;
+/* ===========================================================
+   OS ANTHROPOLOGY — Field Kit
+   10 absences. Floating, three-dimensional OS field.
+   淡色・立体球・英語主役・余白多め
+   =========================================================== */
 
-    <!-- Header -->
-    <header class="header">
-        <div class="header__inner">
-            <h1 class="header__logo">
-                <a href="#">SAUNA 竹<span class="header__logo-sub">～take～</span></a>
+const TYPES = {
+  G: { jp: "生成", en: "GENERATE",    line: "問いが先に立つ", verb: "問いを立て",     color: "#A7C4C2" },
+  S: { jp: "安定", en: "STABILIZE",   line: "定義で固定する", verb: "枠組みで固め",   color: "#B6C9A9" },
+  E: { jp: "外在", en: "EXTERNALIZE", line: "手が先に動く",   verb: "まず形にし",     color: "#E8C9A0" },
+  Y: { jp: "同期", en: "SYNC",        line: "他者へ接続する", verb: "人とつなげ",     color: "#E5B4B0" },
+  M: { jp: "維持", en: "MAINTAIN",    line: "兆候に反応する", verb: "保ち続け",       color: "#C3B6D4" },
+  O: { jp: "観測", en: "OBSERVE",     line: "埋めずに記述する", verb: "まず見極め",   color: "#A9BBD4" },
+  A: { jp: "回避", en: "AVOID",       line: "見ずに離れる",   verb: "一度距離を置き", color: "#E8B894" },
+  D: { jp: "解体", en: "DISMANTLE",   line: "構造を破る",     verb: "壊して開け",     color: "#D9A6AE" },
+};
+const ORDER = ["G", "S", "E", "Y", "M", "O", "A", "D"];
+const INK = "#22211E";
+
+function blendText(p, s) {
+  if (!s) return `${TYPES[p].verb}る人`;
+  const tail = {
+    G: "問いを立てていく人", S: "枠組みで固めていく人", E: "形にしていく人",
+    Y: "人とつなげていく人", M: "保ち続けていく人", O: "見極めていく人",
+    A: "一度距離を置く人", D: "壊して開けていく人",
+  };
+  return `${TYPES[p].verb}、そこから${tail[s]}`;
+}
+
+const Q = [
+  { area: "日常", en: "EVERYDAY", text: "冷蔵庫を開けたら麦茶が切れていた。最初にしたのは——",
+    opts: [["なんで切れる前に補充しないんだろう、と考える", "G"],
+           ["飲み切った人が補充するルールでしょ、と確認する", "S"],
+           ["黙ってヤカンを火にかける", "E"],
+           ["家族に「麦茶ないよ」と連絡する", "Y"],
+           ["まあ水でいいか、と冷蔵庫を閉める", "A"]] },
+  { area: "仕事", en: "WORK", text: "会議で議題が決まらず、場が沈黙した。最初にしたのは——",
+    opts: [["そもそも何を決める場だっけ?と問い直す", "G"],
+           ["過去の議事録や前例を引っぱり出す", "S"],
+           ["ホワイトボードに何か書き始める", "E"],
+           ["周りに「どう思う?」と話を振る", "Y"],
+           ["誰が何を言うか観察してメモする", "O"]] },
+  { area: "危機", en: "CRISIS", text: "通勤中、電車が止まった。最初にしたのは——",
+    opts: [["復旧の見込みと原因を考える", "G"],
+           ["振替輸送の手順を確認する", "S"],
+           ["改札を出てタクシーを呼ぶ", "E"],
+           ["SNSでみんなの動きを見る", "Y"],
+           ["音量を上げて座って待つ", "A"]] },
+  { area: "人間関係", en: "RELATION", text: "友人が急に不機嫌になった。最初にしたのは——",
+    opts: [["何が原因か仮説を立てる", "G"],
+           ["前にこうなった時を思い出す", "M"],
+           ["飲み物でも買ってこようと動く", "E"],
+           ["共通の友人に聞いてみる", "Y"],
+           ["表情の変化をただ見ている", "O"]] },
+  { area: "お金", en: "MONEY", text: "予想外の大きな出費が発生した。最初にしたのは——",
+    opts: [["この出費は何のサインかと考える", "G"],
+           ["家計のルールに照らす", "S"],
+           ["すぐ家計簿に数字を入れる", "E"],
+           ["同じ経験をした人を探す", "Y"],
+           ["見たくなくて通知を閉じる", "A"]] },
+  { area: "日常", en: "EVERYDAY", text: "部屋が散らかってきた。最初にしたのは——",
+    opts: [["なぜ散らかるのか動線から考える", "G"],
+           ["「使ったら戻す」を自分ルール化する", "S"],
+           ["目の前のものから片付け始める", "E"],
+           ["片付け動画でやる気をもらう", "Y"],
+           ["もう全部捨てると決める", "D"]] },
+  { area: "仕事", en: "WORK", text: "前例のない仕事を任された。最初にしたのは——",
+    opts: [["この仕事の目的は何かを問う", "G"],
+           ["似た事例の枠組みを探す", "S"],
+           ["小さく試作して反応を見る", "E"],
+           ["詳しそうな人に聞く", "Y"],
+           ["まず全体をしばらく観察する", "O"]] },
+  { area: "危機", en: "CRISIS", text: "立てていた計画が根本から崩れた。最初にしたのは——",
+    opts: [["崩れの構造を捉える", "G"],
+           ["代替プランに切り替える", "S"],
+           ["今までのやり方を守ろうとする", "M"],
+           ["動けるところから立て直す", "E"],
+           ["計画に固執せず全部作り直す", "D"]] },
+  { area: "AI", en: "AI", text: "やることが多すぎて手がつかない。最初にしたのは——",
+    opts: [["何が本当の問題かを定義する", "G"],
+           ["書き出して優先順位をつける", "S"],
+           ["一番手近なものから着手する", "E"],
+           ["AIに段取りを組ませる", "Y"],
+           ["一旦寝かせて後回しにする", "A"]] },
+  { area: "人間関係", en: "RELATION", text: "知らない人ばかりの場に来てしまった。最初にしたのは——",
+    opts: [["この場は何の場かを見て把握する", "O"],
+           ["誰かに話しかけて輪に入る", "Y"],
+           ["飲み物を取りに動く", "E"],
+           ["この集まり自体に意味を見いだせず帰りたくなる", "D"],
+           ["壁際で時間が過ぎるのを待つ", "A"]] },
+];
+const AREAS = [
+  ["日常", "EVERYDAY"], ["仕事", "WORK"], ["危機", "CRISIS"],
+  ["人間関係", "RELATION"], ["お金", "MONEY"], ["AI", "AI"],
+];
+
+/* ---------- 立体球の浮遊ネットワーク ---------- */
+function Network({ counts }) {
+  const canvasRef = useRef(null);
+  const rafRef = useRef(0);
+
+  const reduced = typeof window !== "undefined" &&
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    let W = 0, H = 0;
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      W = rect.width; H = rect.height;
+      canvas.width = W * DPR; canvas.height = H * DPR;
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const hexToRgb = (h) => {
+      const n = parseInt(h.slice(1), 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    };
+
+    const max = Math.max(1, ...ORDER.map((k) => counts[k] || 0));
+    const cx0 = W / 2, cy0 = H / 2;
+    let nodes = ORDER.map((k, i) => {
+      const n = counts[k] || 0;
+      const ang = (i / ORDER.length) * Math.PI * 2;
+      const r = 22 + (n / max) * 40;
+      return { k, n, r, rgb: hexToRgb(TYPES[k].color),
+        x: cx0 + Math.cos(ang) * 130, y: cy0 + Math.sin(ang) * 130,
+        vx: 0, vy: 0, phase: Math.random() * Math.PI * 2 };
+    });
+
+    let t = 0;
+    const step = () => {
+      t += 0.016;
+      const cx = W / 2, cy = H / 2;
+      for (let i = 0; i < nodes.length; i++) {
+        const a = nodes[i];
+        a.vx += (cx - a.x) * 0.0005;
+        a.vy += (cy - a.y) * 0.0005;
+        for (let j = i + 1; j < nodes.length; j++) {
+          const b = nodes[j];
+          let dx = a.x - b.x, dy = a.y - b.y;
+          let d = Math.hypot(dx, dy) || 0.01;
+          const min = a.r + b.r + 30;
+          if (d < min) {
+            const f = (min - d) / d * 0.035;
+            dx *= f; dy *= f;
+            a.vx += dx; a.vy += dy; b.vx -= dx; b.vy -= dy;
+          }
+        }
+        if (!reduced) {
+          a.vx += Math.cos(t * 0.45 + a.phase) * 0.01;
+          a.vy += Math.sin(t * 0.38 + a.phase) * 0.01;
+        }
+      }
+      for (const a of nodes) {
+        a.vx *= 0.93; a.vy *= 0.93; a.x += a.vx; a.y += a.vy;
+        const pad = a.r + 10;
+        if (a.x < pad) { a.x = pad; a.vx *= -0.5; }
+        if (a.x > W - pad) { a.x = W - pad; a.vx *= -0.5; }
+        if (a.y < pad) { a.y = pad; a.vy *= -0.5; }
+        if (a.y > H - pad) { a.y = H - pad; a.vy *= -0.5; }
+      }
+
+      ctx.clearRect(0, 0, W, H);
+      // 線(淡く、脈打つ)
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i], b = nodes[j];
+          const s = a.n + b.n;
+          if (s === 0) continue;
+          const pulse = reduced ? 0.5 : 0.5 + 0.5 * Math.sin(t * 0.7 + (i + j));
+          const alpha = Math.min(0.16, 0.03 + s * 0.012) * (0.6 + 0.4 * pulse);
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `rgba(34,33,30,${alpha})`;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+      // 立体球
+      for (const a of nodes) {
+        const breathe = reduced ? 0 : Math.sin(t * 0.8 + a.phase) * 1.2;
+        const rr = a.r + breathe;
+        const [R, Gg, B] = a.rgb;
+        const empty = a.n === 0;
+        const ox = -rr * 0.32, oy = -rr * 0.34; // ハイライト位置(左上から光)
+        // 影(下に落とす)
+        if (!empty) {
+          ctx.beginPath();
+          ctx.ellipse(a.x, a.y + rr * 0.92, rr * 0.7, rr * 0.18, 0, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(34,33,30,0.05)";
+          ctx.fill();
+        }
+        // 球本体: 放射グラデで立体感
+        const g = ctx.createRadialGradient(a.x + ox, a.y + oy, rr * 0.1, a.x, a.y, rr);
+        if (empty) {
+          g.addColorStop(0, "rgba(34,33,30,0.04)");
+          g.addColorStop(1, "rgba(34,33,30,0.015)");
+        } else {
+          g.addColorStop(0, `rgba(255,255,255,0.95)`);
+          g.addColorStop(0.25, `rgba(${R},${Gg},${B},0.85)`);
+          g.addColorStop(1, `rgba(${R},${Gg},${B},0.32)`);
+        }
+        ctx.beginPath();
+        ctx.arc(a.x, a.y, rr, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
+        // 縁(淡い同色)
+        ctx.beginPath();
+        ctx.arc(a.x, a.y, rr, 0, Math.PI * 2);
+        ctx.strokeStyle = empty ? "rgba(34,33,30,0.18)" : `rgba(${R},${Gg},${B},0.55)`;
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+        // ハイライト光点
+        if (!empty) {
+          ctx.beginPath();
+          ctx.arc(a.x + ox, a.y + oy, rr * 0.18, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255,255,255,0.6)";
+          ctx.fill();
+        }
+        // ラベル: 英語主役・日本語従属(球の下に置く)
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = INK;
+        ctx.globalAlpha = empty ? 0.32 : 0.92;
+        ctx.font = "9px 'SF Mono','Menlo',monospace";
+        ctx.fillText(TYPES[a.k].en, a.x, a.y + rr + 12);
+        ctx.globalAlpha = empty ? 0.22 : 0.5;
+        ctx.font = "10px 'Hiragino Mincho ProN',serif";
+        ctx.fillText(TYPES[a.k].jp, a.x, a.y + rr + 25);
+        ctx.globalAlpha = 1;
+      }
+      rafRef.current = requestAnimationFrame(step);
+    };
+    step();
+    return () => { cancelAnimationFrame(rafRef.current); window.removeEventListener("resize", resize); };
+  }, [counts, reduced]);
+
+  return <canvas ref={canvasRef} style={{ width: "100%", height: "100%", display: "block" }} />;
+}
+
+function App() {
+  const [stage, setStage] = useState("intro");
+  const [idx, setIdx] = useState(0);
+  const [answers, setAnswers] = useState([]);
+
+  const shuffledOpts = useMemo(() =>
+    Q.map((q) => {
+      const arr = q.opts.map((o) => [o, Math.random()]);
+      arr.sort((a, b) => a[1] - b[1]);
+      return arr.map(([o]) => o);
+    }), []);
+
+  const choose = (type) => {
+    const next = [...answers, { type, area: Q[idx].area }];
+    setAnswers(next);
+    if (idx + 1 < Q.length) setIdx(idx + 1); else setStage("result");
+  };
+  const back = () => { if (idx === 0) return; setIdx(idx - 1); setAnswers(answers.slice(0, -1)); };
+  const restart = () => { setStage("intro"); setIdx(0); setAnswers([]); };
+
+  const result = useMemo(() => {
+    if (answers.length === 0) return null;
+    const counts = {}; ORDER.forEach((k) => counts[k] = 0);
+    answers.forEach((a) => counts[a.type]++);
+    const opp = {}; ORDER.forEach((k) => opp[k] = 0);
+    Q.forEach((q) => { const s = new Set(); q.opts.forEach(([, t]) => s.add(t)); s.forEach((t) => opp[t]++); });
+    const rate = {}; ORDER.forEach((k) => rate[k] = opp[k] > 0 ? counts[k] / opp[k] : 0);
+    const ranked = Object.entries(counts).sort((a, b) =>
+      rate[b[0]] !== rate[a[0]] ? rate[b[0]] - rate[a[0]] : b[1] - a[1]);
+    const byArea = {};
+    AREAS.forEach(([ar]) => {
+      const inArea = answers.filter((a) => a.area === ar);
+      if (!inArea.length) return;
+      const c = {}; inArea.forEach((a) => c[a.type] = (c[a.type] || 0) + 1);
+      byArea[ar] = Object.entries(c).sort((x, y) => y[1] - x[1])[0][0];
+    });
+    return { counts, ranked, byArea,
+      primary: ranked[0][0], secondary: ranked[1][1] > 0 ? ranked[1][0] : null,
+      spread: ranked.filter((r) => r[1] > 0).length };
+  }, [answers]);
+
+  const FONT = "'Hiragino Mincho ProN','Yu Mincho',serif";
+  const MONO = "'SF Mono','Menlo',monospace";
+  const eyebrow = (txt) => (
+    <div style={{ fontFamily: MONO, fontSize: 10, letterSpacing: 4, opacity: 0.45 }}>{txt}</div>
+  );
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#FBFAF7", color: INK, fontFamily: FONT }}>
+      <style>{`
+        @keyframes fadeIn { from {opacity:0; transform:translateY(6px);} to {opacity:1; transform:none;} }
+        .fade { animation: fadeIn .45s ease both; }
+        .opt { transition: padding-left .25s, opacity .2s; opacity:.82; }
+        .opt:hover { padding-left: 22px !important; opacity:1; }
+        .opt:focus-visible { outline: 1px solid ${INK}; outline-offset: 4px; }
+        .mono { font-family:${MONO}; }
+        button { font-family: inherit; }
+        @media (prefers-reduced-motion: reduce){ .fade{animation:none;} }
+      `}</style>
+
+      <div style={{ maxWidth: 600, margin: "0 auto", padding: "0 28px" }}>
+
+        {/* INTRO */}
+        {stage === "intro" && (
+          <div className="fade" style={{ paddingTop: 120, paddingBottom: 90 }}>
+            {eyebrow("OS ANTHROPOLOGY")}
+            <h1 style={{ fontFamily: MONO, fontSize: 30, fontWeight: 400, margin: "26px 0 6px", letterSpacing: 2, lineHeight: 1.3 }}>
+              THE ABSENCE<br />FIELD KIT
             </h1>
-            <nav class="header__nav">
-                <ul class="header__nav-list">
-                    <li><a href="#concept">Concept</a></li>
-                    <li><a href="#rooms">Rooms</a></li>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#pricing">Price</a></li>
-                    <li><a href="#access">Access</a></li>
-                </ul>
-                <a href="https://sauna-take.com/" target="_blank" class="header__cta">ご予約</a>
-            </nav>
-            <button class="header__menu-btn" aria-label="Menu">
-                <span></span><span></span><span></span>
+            <div style={{ fontSize: 13, opacity: 0.55, letterSpacing: 1, marginBottom: 40 }}>
+              10の不在に、あなたは何をするか
+            </div>
+            <div style={{ width: 32, height: 1, background: INK, opacity: 0.3, marginBottom: 36 }} />
+            <p style={{ fontSize: 13, lineHeight: 2.1, opacity: 0.7 }}>
+              日常に空白が開いた10の場面。そのとき最初にした一手を選んでください。正解はありません。
+            </p>
+            <p style={{ fontSize: 12, lineHeight: 2, opacity: 0.5, marginTop: 20 }}>
+              これは診断ではなく、第一反射のクセを観察するための鏡です。人は8つの動作すべてを持っています。
+              違うのは「どれを持つか」ではなく「どの順に出るか」。
+            </p>
+            <button onClick={() => setStage("quiz")}
+              style={{ marginTop: 46, padding: "14px 0", width: "100%", background: "transparent",
+                color: INK, border: `1px solid ${INK}`, fontFamily: MONO, fontSize: 13, letterSpacing: 5, cursor: "pointer" }}>
+              BEGIN
             </button>
-        </div>
-    </header>
-
-    <main>
-        <!-- Hero Section -->
-        <section id="hero" class="hero">
-            <div class="hero__bg">
-                <img src="https://images.unsplash.com/photo-1515362778563-6a8d0e44bc0b?q=80&w=2070&auto=format&fit=crop"
-                    alt="Sauna atmosphere">
+            <div className="mono" style={{ marginTop: 16, fontSize: 10, opacity: 0.38, letterSpacing: 2 }}>
+              10 QUESTIONS / 2 MIN / NO DATA SAVED
             </div>
-            <div class="hero__content">
-                <h2 class="hero__title">
-                    <span class="hero__title-en">Private Sauna Experience</span>
-                    <span class="hero__title-jp">心も体も、解き放つ。</span>
-                </h2>
-                <p class="hero__lead">大分の隠れ家で味わう、<br>極上の「ととのい」。</p>
-                <div class="hero__actions">
-                    <a href="https://sauna-take.com/" target="_blank" class="btn btn--primary">予約する</a>
-                </div>
+          </div>
+        )}
+
+        {/* QUIZ */}
+        {stage === "quiz" && (
+          <div style={{ paddingTop: 72, paddingBottom: 90 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 22 }}>
+              <span className="mono" style={{ fontSize: 10, letterSpacing: 3, opacity: 0.55 }}>
+                {String(idx + 1).padStart(2, "0")} / 10 · {Q[idx].en}
+              </span>
+              {idx > 0 && (
+                <button onClick={back} className="mono"
+                  style={{ background: "none", border: "none", color: INK, opacity: 0.4, fontSize: 10, cursor: "pointer", letterSpacing: 1 }}>
+                  ← BACK
+                </button>
+              )}
             </div>
-            <div class="hero__scroll">
-                <span>SCROLL</span>
+            <div style={{ display: "flex", gap: 4, marginBottom: 44 }}>
+              {Q.map((_, i) => (
+                <div key={i} style={{ flex: 1, height: 1, background: INK, opacity: i <= idx ? 0.75 : 0.12, transition: "opacity .3s" }} />
+              ))}
             </div>
-        </section>
-
-        <!-- Concept Section -->
-        <section id="concept" class="section concept">
-            <div class="container__narrow">
-                <div class="section__header text-center">
-                    <span class="section__subtitle">Concept</span>
-                    <h2 class="section__title">非日常への誘い</h2>
-                </div>
-                <div class="concept__text">
-                    <p>
-                        喧騒を離れ、静寂に包まれる場所。<br>
-                        「SAUNA 竹～take～」は、<br>
-                        大分県大分市にある完全個室のプライベートサウナです。
-                    </p>
-                    <p>
-                        和の情緒と現代的なラグジュアリーが融合した空間で、<br>
-                        自分と向き合い、心身をリセットする。<br>
-                        誰にも邪魔されない、あなただけの極上の時間をお過ごしください。
-                    </p>
-                </div>
+            <div className="fade" key={idx}>
+              <h2 style={{ fontSize: 19, fontWeight: 600, lineHeight: 1.8, marginBottom: 38, letterSpacing: 0.5 }}>
+                {Q[idx].text}
+              </h2>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                {shuffledOpts[idx].map(([label, type], i) => (
+                  <button key={i} className="opt" onClick={() => choose(type)}
+                    style={{ textAlign: "left", padding: "18px 0 18px 8px", background: "none",
+                      border: "none", borderTop: i === 0 ? `1px solid rgba(34,33,30,0.12)` : "none",
+                      borderBottom: `1px solid rgba(34,33,30,0.12)`, fontSize: 14, lineHeight: 1.7,
+                      cursor: "pointer", color: INK }}>
+                    {label}
+                  </button>
+                ))}
+              </div>
             </div>
-        </section>
+          </div>
+        )}
 
-        <!-- Rooms Section -->
-        <section id="rooms" class="section rooms">
-            <div class="container">
-                <div class="section__header text-center">
-                    <span class="section__subtitle">Rooms</span>
-                    <h2 class="section__title">空間を選ぶ</h2>
-                    <p class="section__desc">趣の異なる2つのプライベート空間</p>
-                </div>
-
-                <div class="room-list">
-                    <!-- Room Take -->
-                    <div class="room-card">
-                        <div class="room-card__image">
-                            <img src="https://images.unsplash.com/photo-1558666579-dd8207186105?q=80&w=2671&auto=format&fit=crop"
-                                alt="Room Take Bamboo">
-                        </div>
-                        <div class="room-card__content">
-                            <h3 class="room-card__title">竹 <span class="room-card__title-en">~Take~</span></h3>
-                            <p class="room-card__desc">竹の清々しさと木の温もりに包まれる癒やしの空間。柔らかな光が心安らぐひとときを演出します。</p>
-                            <ul class="room-card__specs">
-                                <li>定員: 1-4名</li>
-                                <li>セルフロウリュ</li>
-                                <li>オートロウリュ</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Room Ta -->
-                    <div class="room-card room-card--reverse">
-                        <div class="room-card__image">
-                            <img src="https://images.unsplash.com/photo-1549488344-c73db2fdb261?q=80&w=2674&auto=format&fit=crop"
-                                alt="Room Ta Rice Field">
-                        </div>
-                        <div class="room-card__content">
-                            <h3 class="room-card__title">田 <span class="room-card__title-en">~Ta~</span></h3>
-                            <p class="room-card__desc">大地の豊かさをイメージした落ち着きのある空間。シックな色調で統一された室内で、深いリラクゼーションへ。</p>
-                            <ul class="room-card__specs">
-                                <li>定員: 1-4名</li>
-                                <li>セルフロウリュ</li>
-                                <li>外気浴スペース</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+        {/* RESULT */}
+        {stage === "result" && result && (
+          <div className="fade" style={{ paddingTop: 64, paddingBottom: 110 }}>
+            {eyebrow("OBSERVATION · NOT A DIAGNOSIS")}
+            <h1 style={{ fontFamily: MONO, fontSize: 18, fontWeight: 400, margin: "16px 0 2px", letterSpacing: 2 }}>
+              YOUR FIRST-RESPONSE FIELD
+            </h1>
+            <div style={{ fontSize: 11, opacity: 0.5, letterSpacing: 1, marginBottom: 24 }}>
+              あなたの第一反射の傾向
             </div>
-        </section>
 
-        <!-- Features Section -->
-        <section id="features" class="section features">
-            <div class="features__bg"></div>
-            <div class="container">
-                <div class="section__header text-center">
-                    <span class="section__subtitle">Features</span>
-                    <h2 class="section__title">竹～take～のこだわり</h2>
-                </div>
-                <div class="features__grid">
-                    <div class="feature-item">
-                        <div class="feature-item__icon">♨</div>
-                        <h3 class="feature-item__title">完全個室</h3>
-                        <p>着替えからサウナ、水風呂、休憩まで、すべてが完全なプライベート空間。周りを気にせずおくつろぎいただけます。</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-item__icon">💧</div>
-                        <h3 class="feature-item__title">セルフロウリュ</h3>
-                        <p>お好みのタイミングでロウリュをお楽しみいただけます。アロマ水の香りに包まれ、発汗を促進します。</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-item__icon">🌿</div>
-                        <h3 class="feature-item__title">本場フィンランド式</h3>
-                        <p>本格的なフィンランド式ストーブを採用。高温かつ最適な湿度で、体の芯から温まります。</p>
-                    </div>
-                </div>
+            <p style={{ fontSize: 17, lineHeight: 1.8, marginBottom: 8, letterSpacing: 0.5 }}>
+              {blendText(result.primary, result.secondary)}
+            </p>
+            <p className="mono" style={{ fontSize: 10, opacity: 0.5, letterSpacing: 1 }}>
+              {TYPES[result.primary].en}{result.secondary ? ` × ${TYPES[result.secondary].en}` : ""}
+              {"   ·   "}{result.spread} / 8 OBSERVED
+            </p>
+
+            <div style={{ margin: "30px 0 12px", height: 440, position: "relative", overflow: "hidden",
+              border: `1px solid rgba(34,33,30,0.08)`, borderRadius: 3,
+              background: "radial-gradient(circle at 50% 42%, rgba(34,33,30,0.015), transparent 72%)" }}>
+              <Network counts={result.counts} />
+              <div className="mono" style={{ position: "absolute", top: 14, left: 16, fontSize: 9, letterSpacing: 2, opacity: 0.38 }}>
+                OS FIELD
+              </div>
             </div>
-        </section>
+            <p style={{ fontSize: 11, lineHeight: 2, opacity: 0.5, marginBottom: 44 }}>
+              球の大きさは、その動作を選んだ回数。OSは固定された点ではなく、互いに繋がり絶えず動いている。
+              大きい球も小さい球も、すべてあなたの中にある。
+            </p>
 
-        <!-- Pricing Section -->
-        <section id="pricing" class="section pricing">
-            <div class="container__narrow">
-                <div class="section__header text-center">
-                    <span class="section__subtitle">Price</span>
-                    <h2 class="section__title">ご利用料金</h2>
-                </div>
-                <div class="pricing__table">
-                    <div class="pricing__row">
-                        <div class="pricing__label">60分コース</div>
-                        <div class="pricing__price">¥3,800<span> / 人</span></div>
-                    </div>
-                    <div class="pricing__row">
-                        <div class="pricing__label">90分コース</div>
-                        <div class="pricing__price">¥5,500<span> / 人</span></div>
-                    </div>
-                    <div class="pricing__row">
-                        <div class="pricing__label">120分コース</div>
-                        <div class="pricing__price">¥7,000<span> / 人</span></div>
-                    </div>
-                    <div class="pricing__note">
-                        ※上記は1名様ご利用時の料金目安です。<br>
-                        ※ご利用人数により料金が異なります。詳細は予約サイトをご確認ください。<br>
-                        ※延長料金：30分毎に ¥1,500
-                    </div>
-                </div>
-                <div class="pricing__action text-center">
-                    <a href="https://sauna-take.com/" target="_blank" class="btn btn--primary">空き状況を確認する</a>
-                </div>
+            {/* 領域別 */}
+            <div className="mono" style={{ fontSize: 10, letterSpacing: 2, opacity: 0.5, marginBottom: 16 }}>
+              FIELD BY CONTEXT
             </div>
-        </section>
-
-        <!-- Access Section -->
-        <section id="access" class="section access">
-            <div class="container">
-                <div class="section__header text-center">
-                    <span class="section__subtitle">Access</span>
-                    <h2 class="section__title">アクセス</h2>
+            <div style={{ borderTop: `1px solid rgba(34,33,30,0.12)`, marginBottom: 44 }}>
+              {AREAS.filter(([a]) => result.byArea[a]).map(([a, en]) => (
+                <div key={a} style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
+                  padding: "13px 0", borderBottom: `1px solid rgba(34,33,30,0.12)` }}>
+                  <span className="mono" style={{ fontSize: 10, letterSpacing: 1, opacity: 0.5 }}>{en}</span>
+                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ width: 8, height: 8, borderRadius: "50%", background: TYPES[result.byArea[a]].color }} />
+                    <span className="mono" style={{ fontSize: 12, letterSpacing: 1 }}>{TYPES[result.byArea[a]].en}</span>
+                  </span>
                 </div>
-                <div class="access__content">
-                    <div class="access__info">
-                        <h3 class="access__name">SAUNA 竹～take～</h3>
-                        <p class="access__address">
-                            〒870-0027<br>
-                            大分県大分市末広町1-3-24 2F
-                        </p>
-                        <p class="access__detail">
-                            大分駅より徒歩5分<br>
-                            アーケード内を直進、コンビニエンスストア横のビル2階
-                        </p>
-                        <dl class="access__hours">
-                            <dt>営業時間</dt>
-                            <dd>10:00 - 24:00 (最終受付 22:30)</dd>
-                            <dt>定休日</dt>
-                            <dd>不定休</dd>
-                        </dl>
-                    </div>
-                    <div class="access__map">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3334.331405903273!2d131.60331087595856!3d33.23727787347494!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35469f61b7f9408b%3A0x6297371191060932!2z44CSODcwLTAwMjcg5aSn5YiG55yM5aSn5YiG5biC5pyv5bqD55S677yR5LiB55uu77yT4oiS77yS77yU!5e0!3m2!1sja!2sjp!4v1703814400000!5m2!1sja!2sjp"
-                            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                </div>
+              ))}
             </div>
-        </section>
-    </main>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer__inner">
-                <div class="footer__logo">
-                    SAUNA 竹～take～
-                </div>
-                <div class="footer__links">
-                    <a href="#">Instagram</a>
-                    <a href="#">Twitter</a>
-                    <a href="#">Privacy Policy</a>
-                </div>
-                <p class="footer__copyright">&copy; 2024 SAUNA 竹～take～ All Rights Reserved.</p>
+            <div style={{ borderLeft: `1px solid ${INK}`, paddingLeft: 18, fontSize: 12.5,
+              lineHeight: 2.2, opacity: 0.72, marginBottom: 40 }}>
+              これはあなたという人間のラベルではありません。今この時期の、初期設定値です。
+              「私は◯◯型だ」と名乗った瞬間、それは観察ではなく思い込みに変わります。
+              設定は書き換えられます——第一反射を観察し、あえて第二反射から始めてみること。それが自分OSの編集です。
             </div>
-        </div>
-    </footer>
 
-    <script src="js/main.js"></script>
+            <div style={{ display: "flex", borderTop: `1px solid ${INK}` }}>
+              <button onClick={() => copyResult(result)} className="mono"
+                style={{ flex: 1, padding: "15px 0", background: "none", border: "none",
+                  borderRight: `1px solid rgba(34,33,30,0.18)`, fontSize: 11, letterSpacing: 3, cursor: "pointer", color: INK }}>
+                COPY
+              </button>
+              <button onClick={restart} className="mono"
+                style={{ flex: 1, padding: "15px 0", background: "none", border: "none",
+                  fontSize: 11, letterSpacing: 3, cursor: "pointer", color: INK, opacity: 0.55 }}>
+                AGAIN
+              </button>
+            </div>
+            <div className="mono" style={{ marginTop: 24, fontSize: 9, opacity: 0.32, lineHeight: 2, letterSpacing: 1 }}>
+              OS ANTHROPOLOGY v2.1 — an observation protocol, not a tool for ranking people.<br />
+              WHERE VERSE INC.
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function copyResult(r) {
+  const lines = [
+    "OS ANTHROPOLOGY — First-response field",
+    `傾向: ${blendText(r.primary, r.secondary)}`,
+    `Primary: ${TYPES[r.primary].en} / Secondary: ${r.secondary ? TYPES[r.secondary].en : "—"}`,
+    `${r.spread} / 8 observed`,
+    "",
+    "By context:",
+    ...AREAS.filter(([a]) => r.byArea[a]).map(([a, en]) => `  ${en}: ${TYPES[r.byArea[a]].en}`),
+    "",
+    "※ Not a label. A current default — rewritable.",
+    "#OS人類学",
+  ].join("\n");
+  navigator.clipboard?.writeText(lines).then(
+    () => alert("Copied"),
+    () => alert("Copy failed")
+  );
+}
+
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
+</script>
 </body>
-
 </html>
