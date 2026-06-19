@@ -1,0 +1,737 @@
+/* ==========================================================================
+   Design Variables
+   ========================================================================== */
+:root {
+    /* Colors */
+    --color-bg: #1a1a1a;
+    --color-bg-secondary: #222222;
+    --color-text-main: #f0f0f0;
+    --color-text-muted: #a0a0a0;
+    --color-accent: #c0a060;
+    /* Gold/Amber */
+    --color-accent-hover: #d4b470;
+    --color-deep-green: #0f1f18;
+    /* Subtle green tint */
+
+    /* Typography */
+    --font-en: 'Cormorant Garamond', serif;
+    --font-jp: 'Noto Serif JP', serif;
+
+    /* Spacing */
+    --spacing-container: 1200px;
+    --spacing-container-narrow: 800px;
+    --spacing-section: 100px;
+
+    /* Transition */
+    --transition-base: 0.3s ease;
+}
+
+/* ==========================================================================
+   Reset & Base Styles
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-jp);
+    background-color: var(--color-bg);
+    color: var(--color-text-main);
+    line-height: 2.2;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 15px;
+    letter-spacing: 0.05em;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--transition-base);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+ul {
+    list-style: none;
+}
+
+/* ==========================================================================
+   Typography Utilities
+   ========================================================================== */
+.text-center {
+    text-align: center;
+}
+
+h1,
+h2,
+h3 {
+    font-weight: 300;
+    letter-spacing: 0.1em;
+}
+
+/* Section Header */
+.section__header {
+    margin-bottom: 4rem;
+}
+
+.section__subtitle {
+    display: block;
+    font-family: var(--font-en);
+    color: var(--color-accent);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+}
+
+.section__title {
+    font-size: 32px;
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+}
+
+.section__desc {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   Components
+   ========================================================================== */
+/* Buttons */
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 16px 40px;
+    border: none;
+    background: var(--color-accent);
+    color: var(--color-bg);
+    font-family: var(--font-en);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+    border-radius: 9999px;
+    min-width: 200px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.btn--primary {
+    /* Base styles handled in .btn */
+}
+
+.btn--primary:hover {
+    background: #d4b470;
+    /* Slightly lighter gold */
+    color: var(--color-bg);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(192, 160, 96, 0.4);
+}
+
+/* Container */
+.container {
+    max-width: var(--spacing-container);
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.container__narrow {
+    max-width: var(--spacing-container-narrow);
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Section Padding */
+.section {
+    padding: var(--spacing-section) 0;
+}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    padding: 1.5rem 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent);
+    transition: background-color var(--transition-base);
+}
+
+.header.is-scrolled {
+    background-color: rgba(26, 26, 26, 0.95);
+    padding: 1rem 0;
+    backdrop-filter: blur(10px);
+}
+
+.header__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.header__logo a {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.header__logo-sub {
+    font-family: var(--font-en);
+    font-size: 1rem;
+    margin-left: 0.5rem;
+    font-weight: 400;
+}
+
+.header__nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.header__nav-list {
+    display: flex;
+    gap: 2rem;
+}
+
+.header__nav-list a {
+    font-family: var(--font-en);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.header__nav-list a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--color-accent);
+    transition: width var(--transition-base);
+}
+
+.header__nav-list a:hover::after {
+    width: 100%;
+}
+
+.header__cta {
+    border: 1px solid var(--color-accent);
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    color: var(--color-accent);
+    font-size: 0.9rem;
+    transition: all var(--transition-base);
+}
+
+.header__cta:hover {
+    background: var(--color-accent);
+    color: var(--color-bg);
+}
+
+.header__menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 30px;
+    height: 20px;
+    position: relative;
+}
+
+.header__menu-btn span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-text-main);
+    position: absolute;
+    left: 0;
+}
+
+.header__menu-btn span:nth-child(1) {
+    top: 0;
+}
+
+.header__menu-btn span:nth-child(2) {
+    top: 9px;
+}
+
+.header__menu-btn span:nth-child(3) {
+    bottom: 0;
+}
+
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
+.hero {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.hero__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.hero__bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.6;
+    animation: zoomIn 20s infinite alternate;
+}
+
+@keyframes zoomIn {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1.1);
+    }
+}
+
+.hero__content {
+    text-align: center;
+    z-index: 1;
+    padding: 0 20px;
+}
+
+.hero__title {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+}
+
+.hero__title-en {
+    font-family: var(--font-en);
+    font-size: 1.2rem;
+    letter-spacing: 0.3em;
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.hero__title-jp {
+    font-size: 3.5rem;
+    /* vertical writing mode could be an option for more JP feel, horizontal for now for readability */
+    letter-spacing: 0.1em;
+}
+
+.hero__lead {
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+}
+
+.hero__scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-en);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    opacity: 0.7;
+}
+
+.hero__scroll::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 50px;
+    background-color: var(--color-text-main);
+    margin: 10px auto 0;
+    animation: scrollDown 2s infinite;
+}
+
+@keyframes scrollDown {
+    0% {
+        transform-origin: top;
+        transform: scaleY(0);
+    }
+
+    50% {
+        transform-origin: top;
+        transform: scaleY(1);
+    }
+
+    51% {
+        transform-origin: bottom;
+        transform: scaleY(1);
+    }
+
+    100% {
+        transform-origin: bottom;
+        transform: scaleY(0);
+    }
+}
+
+/* ==========================================================================
+   Concept Section
+   ========================================================================== */
+.concept__text {
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 2.5;
+}
+
+.concept__text p {
+    margin-bottom: 2rem;
+}
+
+/* ==========================================================================
+   Rooms Section
+   ========================================================================== */
+.room-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6rem;
+}
+
+.room-card {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+}
+
+.room-card--reverse {
+    flex-direction: row-reverse;
+}
+
+.room-card__image {
+    flex: 1;
+    overflow: hidden;
+}
+
+.room-card__image img {
+    transition: transform 0.5s ease;
+}
+
+.room-card:hover .room-card__image img {
+    transform: scale(1.05);
+}
+
+.room-card__content {
+    flex: 0.8;
+}
+
+.room-card__title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+}
+
+.room-card__title-en {
+    font-family: var(--font-en);
+    font-size: 1.2rem;
+    color: var(--color-accent);
+    margin-left: 1rem;
+}
+
+.room-card__desc {
+    margin-bottom: 2rem;
+    color: var(--color-text-muted);
+}
+
+.room-card__specs li {
+    display: inline-block;
+    border: 1px solid #444;
+    padding: 0.2rem 1rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   Features Section
+   ========================================================================== */
+.features {
+    background-color: var(--color-bg-secondary);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Pattern overlay or texture could go here */
+
+.features__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 3rem;
+    text-align: center;
+}
+
+.feature-item {
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-5px);
+}
+
+.feature-item__icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-accent);
+}
+
+.feature-item__title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.feature-item p {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   Pricing Section
+   ========================================================================== */
+.pricing__table {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 3rem;
+    margin-bottom: 3rem;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.pricing__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pricing__row:last-of-type {
+    border-bottom: none;
+}
+
+.pricing__label {
+    font-size: 1.2rem;
+}
+
+.pricing__price {
+    font-family: var(--font-en);
+    font-size: 1.5rem;
+    color: var(--color-accent);
+}
+
+.pricing__price span {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin-left: 0.5rem;
+}
+
+.pricing__note {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    line-height: 1.8;
+}
+
+/* ==========================================================================
+   Access Section
+   ========================================================================== */
+.access__content {
+    display: flex;
+    gap: 4rem;
+    align-items: flex-start;
+}
+
+.access__info {
+    flex: 1;
+}
+
+.access__name {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.access__address,
+.access__detail {
+    margin-bottom: 2rem;
+}
+
+.access__hours dt {
+    color: var(--color-accent);
+    margin-bottom: 0.5rem;
+}
+
+.access__hours dd {
+    margin-bottom: 1.5rem;
+}
+
+.access__map {
+    flex: 1;
+}
+
+.access__map iframe {
+    width: 100%;
+    height: 400px;
+    filter: grayscale(100%) invert(90%);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.footer {
+    padding: 4rem 0 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+.footer__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.footer__logo {
+    font-size: 1.2rem;
+    color: var(--color-text-main);
+}
+
+.footer__links {
+    display: flex;
+    gap: 2rem;
+}
+
+.footer__links a:hover {
+    color: var(--color-accent);
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 768px) {
+    .header__nav {
+        display: none;
+        /* simple hide for now, would need JS toggle for real menu */
+    }
+
+    .header__menu-btn {
+        display: block;
+    }
+
+    .hero__title-jp {
+        font-size: 2.2rem;
+    }
+
+    .room-card {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .room-card--reverse {
+        flex-direction: column;
+    }
+
+    .access__content {
+        flex-direction: column;
+    }
+
+    .pricing__table {
+        padding: 1.5rem;
+    }
+
+    .container,
+    .container__narrow,
+    .hero__content {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+/* ==========================================================================
+   Page Transition
+   ========================================================================== */
+.transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999;
+    display: flex;
+    pointer-events: none;
+    /* Let clicks pass through after animation */
+}
+
+.transition-block {
+    flex: 1;
+    background-color: #1a1a1a;
+    /* Sumi color */
+    height: 100%;
+    transform: translateY(-100%);
+}
+
+/* Content initial state */
+.header,
+main,
+.footer {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+body.is-loaded .header,
+body.is-loaded main,
+body.is-loaded .footer {
+    opacity: 1;
+}
+
+/* Animation Keyframes */
+@keyframes curtinDrop {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    40% {
+        transform: translateY(0);
+    }
+
+    60% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-100%);
+    }
+}
