@@ -4,21 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>OS Anthropology — The Absence Field Kit</title>
-<meta name="description" content="10の不在に、あなたは何をするか。第一反射のクセを観察する。">
+<meta name="description" content="10の不在に、あなたは何をするか。第一反射のクセを観察する鏡。">
 <meta property="og:title" content="OS Anthropology — The Absence Field Kit">
 <meta property="og:description" content="10の不在に、あなたは何をするか。診断ではなく、観察のための鏡。">
 <meta property="og:type" content="website">
 <style>
   html,body{margin:0;padding:0;background:#FBFAF7;-webkit-text-size-adjust:100%;}
   *{box-sizing:border-box;}
+  #root{min-height:100vh;}
 </style>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.6/babel.min.js"></script>
 </head>
 <body>
 <div id="root"></div>
-<script type="text/babel" data-presets="react">
+<script>
 const { useState, useMemo, useRef, useEffect } = React;
 /* ===========================================================
    OS ANTHROPOLOGY — Field Kit
@@ -27,151 +27,416 @@ const { useState, useMemo, useRef, useEffect } = React;
    =========================================================== */
 
 const TYPES = {
-  G: { jp: "生成", en: "GENERATE",    line: "問いが先に立つ", verb: "問いを立て",     color: "#A7C4C2" },
-  S: { jp: "安定", en: "STABILIZE",   line: "定義で固定する", verb: "枠組みで固め",   color: "#B6C9A9" },
-  E: { jp: "外在", en: "EXTERNALIZE", line: "手が先に動く",   verb: "まず形にし",     color: "#E8C9A0" },
-  Y: { jp: "同期", en: "SYNC",        line: "他者へ接続する", verb: "人とつなげ",     color: "#E5B4B0" },
-  M: { jp: "維持", en: "MAINTAIN",    line: "兆候に反応する", verb: "保ち続け",       color: "#C3B6D4" },
-  O: { jp: "観測", en: "OBSERVE",     line: "埋めずに記述する", verb: "まず見極め",   color: "#A9BBD4" },
-  A: { jp: "回避", en: "AVOID",       line: "見ずに離れる",   verb: "一度距離を置き", color: "#E8B894" },
-  D: { jp: "解体", en: "DISMANTLE",   line: "構造を破る",     verb: "壊して開け",     color: "#D9A6AE" },
+  G: {
+    jp: "生成",
+    en: "GENERATE",
+    line: "問いが先に立つ",
+    verb: "問いを立て",
+    color: "#A7C4C2"
+  },
+  S: {
+    jp: "安定",
+    en: "STABILIZE",
+    line: "定義で固定する",
+    verb: "枠組みで固め",
+    color: "#B6C9A9"
+  },
+  E: {
+    jp: "外在",
+    en: "EXTERNALIZE",
+    line: "手が先に動く",
+    verb: "まず形にし",
+    color: "#E8C9A0"
+  },
+  Y: {
+    jp: "同期",
+    en: "SYNC",
+    line: "他者へ接続する",
+    verb: "人とつなげ",
+    color: "#E5B4B0"
+  },
+  M: {
+    jp: "維持",
+    en: "MAINTAIN",
+    line: "兆候に反応する",
+    verb: "保ち続け",
+    color: "#C3B6D4"
+  },
+  O: {
+    jp: "観測",
+    en: "OBSERVE",
+    line: "埋めずに記述する",
+    verb: "まず見極め",
+    color: "#A9BBD4"
+  },
+  A: {
+    jp: "回避",
+    en: "AVOID",
+    line: "見ずに離れる",
+    verb: "一度距離を置き",
+    color: "#E8B894"
+  },
+  D: {
+    jp: "解体",
+    en: "DISMANTLE",
+    line: "構造を破る",
+    verb: "壊して開け",
+    color: "#D9A6AE"
+  }
 };
 const ORDER = ["G", "S", "E", "Y", "M", "O", "A", "D"];
 const INK = "#22211E";
 
+// 各型の: 強み / 過剰時のリスク / 今日試せる実験(主属性として出たとき)
+const PROFILE = {
+  G: {
+    strength: "空白を見ると、まず「これは何か」と問いを立てられる。ゼロから意味を起こす力。",
+    risk: "問いばかり増えて、固める・形にする所まで進まないことがある。",
+    exp: "次に何かが気になったら、問いを立てる前に一度だけ手を動かしてみる(外在から始める)。"
+  },
+  S: {
+    strength: "空白を、既存の枠組み・ルール・前例で素早く固定できる。曖昧さを収める力。",
+    risk: "枠が目的化して、枠そのものが古びても守り続けてしまうことがある。",
+    exp: "次にルールを確認したくなったら、あえて一度ルール無しで動いてみる(外在/生成から始める)。"
+  },
+  E: {
+    strength: "考えるより先に手が動く。形にして初めて分かる、を体現する力。",
+    risk: "出力が多すぎて、その意味を見極める時間が追いつかないことがある。",
+    exp: "次に手が動きそうになったら、3秒だけ止めて「これは何の空白か」を見てから動く(観測から始める)。"
+  },
+  Y: {
+    strength: "空白を一人で抱えず、他者の知や場へ素早くつなげられる力。",
+    risk: "接続先に依存して、自前の問いや判断が痩せることがある。",
+    exp: "次に誰かに聞きたくなったら、まず自分なりの仮説を一つ立ててから聞く(生成から始める)。"
+  },
+  M: {
+    strength: "空白が開く前の兆候に気づき、保ち・備える力。構造を次へ渡す担い手。",
+    risk: "守る対象の意味が失効しても、保守だけが続くことがある。",
+    exp: "次に「いつも通り」を守りたくなったら、一度だけ「これは今も必要か」を問う(生成から始める)。"
+  },
+  O: {
+    strength: "埋めたい衝動より先に、空白の構造を見て記述できる力。距離を取る冷静さ。",
+    risk: "観察と保留が常態化し、生成にも行動にも参加しないことがある。",
+    exp: "次にじっと見たくなったら、観察を10秒で切り上げて何か一つ動いてみる(外在から始める)。"
+  },
+  A: {
+    strength: "過負荷の中で、今は見ないという選択ができる。注意を守るトリアージの力。",
+    risk: "先送りが積もり、不在が後でまとめて返ってくることがある。",
+    exp: "次に目を逸らした空白を、一つだけ紙に書き出してみる(観測から始める)。"
+  },
+  D: {
+    strength: "失効した構造を壊し、新しい場所を開ける力。ゼロベースに戻す勇気。",
+    risk: "再建のない破壊になり、空白を広げて終わることがある。",
+    exp: "次に「壊したい」と思ったら、壊した後に何を建てるかを先に一つ決める(生成/安定から始める)。"
+  }
+};
+
+// 副属性に応じた一言(主の伸ばし方を補助する方向で)
+function secondaryNote(p, s) {
+  if (!s) return "第二反射が定まっていない今は、いろいろな始め方を試せる時期。";
+  const map = {
+    G: "次に問いを立てる動きが控えているので、止まったら「何が問題か」に戻れる。",
+    S: "次に枠で固める動きがあるので、広げた後にちゃんと収められる。",
+    E: "次に手を動かす動きがあるので、考えを形にして確かめやすい。",
+    Y: "次に人へつなぐ動きがあるので、一人で抱えそうな時に開ける。",
+    M: "次に保ち続ける動きがあるので、立てたものを継続に乗せられる。",
+    O: "次に見極める動きがあるので、勢いの後に立ち止まって確かめられる。",
+    A: "次に距離を置く動きがあるので、抱えすぎる前に降ろせる。",
+    D: "次に壊す動きがあるので、行き詰まったら作り直しに振れる。"
+  };
+  return map[s];
+}
 function blendText(p, s) {
   if (!s) return `${TYPES[p].verb}る人`;
   const tail = {
-    G: "問いを立てていく人", S: "枠組みで固めていく人", E: "形にしていく人",
-    Y: "人とつなげていく人", M: "保ち続けていく人", O: "見極めていく人",
-    A: "一度距離を置く人", D: "壊して開けていく人",
+    G: "問いを立てていく人",
+    S: "枠組みで固めていく人",
+    E: "形にしていく人",
+    Y: "人とつなげていく人",
+    M: "保ち続けていく人",
+    O: "見極めていく人",
+    A: "一度距離を置く人",
+    D: "壊して開けていく人"
   };
   return `${TYPES[p].verb}、そこから${tail[s]}`;
 }
 
-const Q = [
-  { area: "日常", en: "EVERYDAY", text: "冷蔵庫を開けたら麦茶が切れていた。最初にしたのは——",
-    opts: [["なんで切れる前に補充しないんだろう、と考える", "G"],
-           ["飲み切った人が補充するルールでしょ、と確認する", "S"],
-           ["黙ってヤカンを火にかける", "E"],
-           ["家族に「麦茶ないよ」と連絡する", "Y"],
-           ["まあ水でいいか、と冷蔵庫を閉める", "A"]] },
-  { area: "仕事", en: "WORK", text: "会議で議題が決まらず、場が沈黙した。最初にしたのは——",
-    opts: [["そもそも何を決める場だっけ?と問い直す", "G"],
-           ["過去の議事録や前例を引っぱり出す", "S"],
-           ["ホワイトボードに何か書き始める", "E"],
-           ["周りに「どう思う?」と話を振る", "Y"],
-           ["誰が何を言うか観察してメモする", "O"]] },
-  { area: "危機", en: "CRISIS", text: "通勤中、電車が止まった。最初にしたのは——",
-    opts: [["復旧の見込みと原因を考える", "G"],
-           ["振替輸送の手順を確認する", "S"],
-           ["改札を出てタクシーを呼ぶ", "E"],
-           ["SNSでみんなの動きを見る", "Y"],
-           ["音量を上げて座って待つ", "A"]] },
-  { area: "人間関係", en: "RELATION", text: "友人が急に不機嫌になった。最初にしたのは——",
-    opts: [["何が原因か仮説を立てる", "G"],
-           ["前にこうなった時を思い出す", "M"],
-           ["飲み物でも買ってこようと動く", "E"],
-           ["共通の友人に聞いてみる", "Y"],
-           ["表情の変化をただ見ている", "O"]] },
-  { area: "お金", en: "MONEY", text: "予想外の大きな出費が発生した。最初にしたのは——",
-    opts: [["この出費は何のサインかと考える", "G"],
-           ["家計のルールに照らす", "S"],
-           ["すぐ家計簿に数字を入れる", "E"],
-           ["同じ経験をした人を探す", "Y"],
-           ["見たくなくて通知を閉じる", "A"]] },
-  { area: "日常", en: "EVERYDAY", text: "部屋が散らかってきた。最初にしたのは——",
-    opts: [["なぜ散らかるのか動線から考える", "G"],
-           ["「使ったら戻す」を自分ルール化する", "S"],
-           ["目の前のものから片付け始める", "E"],
-           ["片付け動画でやる気をもらう", "Y"],
-           ["もう全部捨てると決める", "D"]] },
-  { area: "仕事", en: "WORK", text: "前例のない仕事を任された。最初にしたのは——",
-    opts: [["この仕事の目的は何かを問う", "G"],
-           ["似た事例の枠組みを探す", "S"],
-           ["小さく試作して反応を見る", "E"],
-           ["詳しそうな人に聞く", "Y"],
-           ["まず全体をしばらく観察する", "O"]] },
-  { area: "危機", en: "CRISIS", text: "立てていた計画が根本から崩れた。最初にしたのは——",
-    opts: [["崩れの構造を捉える", "G"],
-           ["代替プランに切り替える", "S"],
-           ["今までのやり方を守ろうとする", "M"],
-           ["動けるところから立て直す", "E"],
-           ["計画に固執せず全部作り直す", "D"]] },
-  { area: "AI", en: "AI", text: "やることが多すぎて手がつかない。最初にしたのは——",
-    opts: [["何が本当の問題かを定義する", "G"],
-           ["書き出して優先順位をつける", "S"],
-           ["一番手近なものから着手する", "E"],
-           ["AIに段取りを組ませる", "Y"],
-           ["一旦寝かせて後回しにする", "A"]] },
-  { area: "人間関係", en: "RELATION", text: "知らない人ばかりの場に来てしまった。最初にしたのは——",
-    opts: [["この場は何の場かを見て把握する", "O"],
-           ["誰かに話しかけて輪に入る", "Y"],
-           ["飲み物を取りに動く", "E"],
-           ["この集まり自体に意味を見いだせず帰りたくなる", "D"],
-           ["壁際で時間が過ぎるのを待つ", "A"]] },
-];
-const AREAS = [
-  ["日常", "EVERYDAY"], ["仕事", "WORK"], ["危機", "CRISIS"],
-  ["人間関係", "RELATION"], ["お金", "MONEY"], ["AI", "AI"],
-];
+/* ───────── 過去の振り返り(主属性ごとの固有エピソード) ───────── */
+const LOOKBACK = {
+  G: "何かを始める前に「そもそもこれは何のためか」と問いすぎて、周りが動き出しても自分だけ立ち止まっていた——そんな場面が、過去に何度かあったはずです。",
+  S: "新しい状況に入るとまず「ルールや前例はどうなっているか」を確かめ、それが見つからないと落ち着かなかった——そんな自分を、過去に見たことがあるはずです。",
+  E: "考えがまとまる前に手を動かし始めて、作ってから「これじゃなかった」と気づく——それでも動いていた、という経験が過去にあったはずです。",
+  Y: "迷ったとき、自分の考えより先に「みんなはどうしているか」を確かめにいって、それで安心したり、逆に振り回されたりした——心当たりがあるはずです。",
+  M: "問題が起きる前の小さな兆候が気になって、先回りして備える。気づかれないことも多いけれど、あなたが守っていたから回っていた場面があったはずです。",
+  O: "その場で動くより先に、状況をじっと観察してしまう。「なぜ動かないの」と言われたこともあるかもしれないけれど、あなたは見えていたはずです。",
+  A: "向き合うのが重いことを、つい後回しにした。先送りしているうちに大きくなって、後で苦労した——そんな経験が過去にあったはずです。",
+  D: "うまくいかない状況を、部分的に直すより「いっそ全部やめたい/変えたい」と思った。実際にそうして場を変えたことも、壊しただけで終わったこともあるはずです。"
+};
+
+/* ───────── 再解釈(副属性で角度が変わる) ───────── */
+// 主属性の「クセ」を、副属性の視点から肯定的に意味づけし直す
+function reframe(p, s) {
+  // 主属性ごとの「弱点に見えていたもの」
+  const weak = {
+    G: "立ち止まって動けないように見えたあの時間",
+    S: "ルールに縛られて融通がきかないように見えたあの慎重さ",
+    E: "考えなしに動いているように見えたあの性急さ",
+    Y: "自分がないように見えたあの確認グセ",
+    M: "心配性で動きが遅いように見えたあの用心深さ",
+    O: "傍観しているように見えたあの距離",
+    A: "逃げているように見えたあの先送り",
+    D: "壊してばかりに見えたあの破壊衝動"
+  };
+  // 副属性ごとの再解釈の方向
+  const angle = {
+    G: "は、誰も問わなかった「本当の問題」を一人で探していた時間でした。",
+    S: "は、土台のない場所に足場を作ろうとしていた働きでした。",
+    E: "は、頭で考えるより先に世界から学ぼうとする手の速さでした。",
+    Y: "は、一人で抱え込まずに場とつながろうとする開かれた姿勢でした。",
+    M: "は、誰かが困る前にそれを防ごうとする静かな配慮でした。",
+    O: "は、勢いに流されずに本質を見ようとする目でした。",
+    A: "は、抱えきれない負荷から自分を守るための、必要な距離でした。",
+    D: "は、古びた枠に居続けず、次の場所を開こうとする力でした。"
+  };
+  const w = weak[p];
+  if (!s) return `${w}は、弱点ではなく、あなたの初期設定の現れにすぎません。`;
+  return `${w}${angle[s]}`;
+}
+
+/* ───────── 悩みのキーワード解析(AI不要・静的) ───────── */
+const KW = {
+  G: ["なぜ", "意味", "わからない", "何のため", "目的", "問い", "考えすぎ", "答えが出ない", "本当に", "そもそも"],
+  S: ["ルール", "正しい", "普通", "べき", "ちゃんと", "基準", "決まり", "間違", "きちんと", "常識"],
+  E: ["やらなきゃ", "動けない", "行動", "手をつけ", "できない", "始められ", "進まない", "形に", "実行"],
+  Y: ["みんな", "比べ", "周り", "どう思わ", "評価", "SNS", "嫌われ", "認められ", "孤独", "つながり", "浮いて", "人目"],
+  M: ["続け", "守", "維持", "失う", "変わって", "不安", "心配", "将来", "老後", "続かない", "保て", "備え"],
+  O: ["見て", "観察", "距離", "分析", "考えるだけ", "傍観", "客観", "冷め", "俯瞰"],
+  A: ["逃げ", "避け", "後回し", "向き合え", "見たくない", "先延ばし", "めんどう", "考えたくない", "放置"],
+  D: ["壊し", "やめたい", "全部", "リセット", "辞め", "捨て", "変えたい", "ぶち壊", "投げ出", "限界"]
+};
+
+// 表層→中間→深層への遡行(型ごと・3段)。すべて断定せず問いで、深層で止める。
+// 仕様書15章: 遡行は観察ではなく解釈。死・存在の不安まで遡ったら停止規則で止める。
+const DEEPEN = {
+  G: {
+    surface: "表に出ているのは「意味がわからない / 答えが出ない」という問いです。",
+    middle: "その「わからなさ」は、答えが本当に無いからではなく、答えを出すと動かなければならないからかもしれません。",
+    deep: "さらに奥には、「自分が何のために在るのか」が定まらない感覚があるのかもしれません。問いを立て続けることで、その空白に触れずにいられる。"
+  },
+  S: {
+    surface: "表に出ているのは「正しさ / こうあるべき」への強いこだわりです。",
+    middle: "その基準は、あなた自身が選んだものではなく、誰かに用意された枠を借りているのかもしれません。",
+    deep: "さらに奥には、「枠が無いと自分が崩れてしまう」という不確かさがあるのかもしれません。正しさは、その不確かさを覆う蓋なのかもしれません。"
+  },
+  E: {
+    surface: "表に出ているのは「動けない / 手につかない」という停滞です。",
+    middle: "動けないのは能力の問題ではなく、動いた先で何かを失うと分かっているからかもしれません。",
+    deep: "さらに奥には、「立ち止まると、自分に向き合わされてしまう」恐れがあるのかもしれません。動き続けることで、それを避けていられる。"
+  },
+  Y: {
+    surface: "表に出ているのは「他人にどう見られるか / みんなと比べて」という意識です。",
+    middle: "その評価が欲しいのは、自分の価値を自分では決められないからかもしれません。",
+    deep: "さらに奥には、「自分は何者か」が定まらない感覚があるのかもしれません。その不確かさを、他者の目で埋めようとしているのかもしれません。"
+  },
+  M: {
+    surface: "表に出ているのは「失うのが怖い / 将来が不安」という緊張です。",
+    middle: "守ろうとしているものは、今も必要なものではなく、失うのが怖いから保っているだけかもしれません。",
+    deep: "さらに奥には、「続いている自分」そのものが途切れることへの怖さがあるのかもしれません。失うのが怖いのは、モノではなく連続性なのかもしれません。"
+  },
+  O: {
+    surface: "表に出ているのは「見えているのに動けない / 分析だけが進む」状態です。",
+    middle: "見続けているのは、まだ見足りないからではなく、見ることで動かずに済ませているからかもしれません。",
+    deep: "さらに奥には、「参加して傷つくこと」への怖さがあるのかもしれません。観察する位置にいる限り、当事者にならずにいられる。"
+  },
+  A: {
+    surface: "表に出ているのは「逃げている / 後回しにしている」という感覚です。",
+    middle: "避けているのは、本当は避け続けられないものだと、どこかで分かっているのかもしれません。",
+    deep: "さらに奥には、「向き合ったら、自分では抱えきれない」という予感があるのかもしれません。先送りは、その予感からの一時的な避難なのかもしれません。"
+  },
+  D: {
+    surface: "表に出ているのは「全部壊したい / リセットしたい」という衝動です。",
+    middle: "壊したいその構造を壊した後、何を建てたいかが見えないなら、壊したいのは構造ではないのかもしれません。",
+    deep: "さらに奥には、「今の自分のままではいられない」という切迫があるのかもしれません。壊そうとしているのは、外の構造ではなく、古い自分なのかもしれません。"
+  }
+};
+
+// 遡行の停止(どの型でも共通)。仕様書15章の停止規則。
+const DEEPEN_STOP = "ここから先——「なぜ自分は不確かなのか」「なぜ人は失い、終わるのか」——は、答えの出ない問いです。OS人類学は、ここで遡るのをやめます。すべてを説明する答えは、何も説明しないからです。大切なのは答えを出すことではなく、自分が今どの不在に応えているのかを、知っていることです。";
+
+// ───────── AI解析(Cloudflare Worker経由) ─────────
+// ↓↓↓ デプロイ後、ここに自分のWorker URLを入れる ↓↓↓
+const WORKER_URL = "https://os-worry.oltec-shota.workers.dev";
+
+// 待機中に表示する、不在に関する静かな一文(ランダムに巡る)
+const LOADING_LINES = ["その悩みは、どの空白に触れているのでしょう。", "応答の奥にある不在を、読んでいます。", "答えではなく、構造を見ています。", "あなたが何に応えているのかを、観察しています。", "急がず、表層から奥へ。"];
+
+// AIを呼ぶ。失敗時はnullを返し、呼び出し側でキーワード版にフォールバック。
+async function analyzeWorryAI(text, typeHint) {
+  try {
+    const res = await fetch(WORKER_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        worry: text.slice(0, 1000),
+        type_hint: typeHint || ""
+      })
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data.ok || !data.result) return null;
+    return data.result;
+  } catch {
+    return null;
+  }
+}
+function analyzeWorry(text) {
+  if (!text || text.trim().length < 2) return null;
+  const scores = {};
+  ORDER.forEach(k => scores[k] = 0);
+  ORDER.forEach(k => {
+    KW[k].forEach(w => {
+      if (text.includes(w)) scores[k] += 1;
+    });
+  });
+  const ranked = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const top = ranked[0][1] > 0 ? ranked[0][0] : null;
+  // 「近づけば消えるズレか / 手放せば消える借り物か」判定の素材
+  // 同期・安定の語が強い = 借り物の可能性 / 生成・外在・維持 = 近づけるズレ寄り
+  const borrowed = scores.Y + scores.S > scores.G + scores.E + scores.M;
+  return {
+    top,
+    scores,
+    ranked,
+    borrowed,
+    hasSignal: ranked[0][1] > 0
+  };
+}
+const Q = [{
+  area: "日常",
+  en: "EVERYDAY",
+  text: "冷蔵庫を開けたら麦茶が切れていた。最初にしたのは——",
+  opts: [["なんで切れる前に補充しないんだろう、と考える", "G"], ["飲み切った人が補充するルールでしょ、と確認する", "S"], ["黙ってヤカンを火にかける", "E"], ["家族に「麦茶ないよ」と連絡する", "Y"], ["まあ水でいいか、と冷蔵庫を閉める", "A"]]
+}, {
+  area: "仕事",
+  en: "WORK",
+  text: "会議で議題が決まらず、場が沈黙した。最初にしたのは——",
+  opts: [["そもそも何を決める場だっけ?と問い直す", "G"], ["過去の議事録や前例を引っぱり出す", "S"], ["ホワイトボードに何か書き始める", "E"], ["周りに「どう思う?」と話を振る", "Y"], ["誰が何を言うか観察してメモする", "O"]]
+}, {
+  area: "危機",
+  en: "CRISIS",
+  text: "通勤中、電車が止まった。最初にしたのは——",
+  opts: [["復旧の見込みと原因を考える", "G"], ["振替輸送の手順を確認する", "S"], ["改札を出てタクシーを呼ぶ", "E"], ["SNSでみんなの動きを見る", "Y"], ["音量を上げて座って待つ", "A"]]
+}, {
+  area: "人間関係",
+  en: "RELATION",
+  text: "友人が急に不機嫌になった。最初にしたのは——",
+  opts: [["何が原因か仮説を立てる", "G"], ["前にこうなった時を思い出す", "M"], ["飲み物でも買ってこようと動く", "E"], ["共通の友人に聞いてみる", "Y"], ["表情の変化をただ見ている", "O"]]
+}, {
+  area: "お金",
+  en: "MONEY",
+  text: "予想外の大きな出費が発生した。最初にしたのは——",
+  opts: [["この出費は何のサインかと考える", "G"], ["家計のルールに照らす", "S"], ["すぐ家計簿に数字を入れる", "E"], ["同じ経験をした人を探す", "Y"], ["見たくなくて通知を閉じる", "A"]]
+}, {
+  area: "日常",
+  en: "EVERYDAY",
+  text: "部屋が散らかってきた。最初にしたのは——",
+  opts: [["なぜ散らかるのか動線から考える", "G"], ["「使ったら戻す」を自分ルール化する", "S"], ["目の前のものから片付け始める", "E"], ["片付け動画でやる気をもらう", "Y"], ["もう全部捨てると決める", "D"]]
+}, {
+  area: "仕事",
+  en: "WORK",
+  text: "前例のない仕事を任された。最初にしたのは——",
+  opts: [["この仕事の目的は何かを問う", "G"], ["似た事例の枠組みを探す", "S"], ["小さく試作して反応を見る", "E"], ["詳しそうな人に聞く", "Y"], ["まず全体をしばらく観察する", "O"]]
+}, {
+  area: "危機",
+  en: "CRISIS",
+  text: "立てていた計画が根本から崩れた。最初にしたのは——",
+  opts: [["崩れの構造を捉える", "G"], ["代替プランに切り替える", "S"], ["今までのやり方を守ろうとする", "M"], ["動けるところから立て直す", "E"], ["計画に固執せず全部作り直す", "D"]]
+}, {
+  area: "AI",
+  en: "AI",
+  text: "やることが多すぎて手がつかない。最初にしたのは——",
+  opts: [["何が本当の問題かを定義する", "G"], ["書き出して優先順位をつける", "S"], ["一番手近なものから着手する", "E"], ["AIに段取りを組ませる", "Y"], ["一旦寝かせて後回しにする", "A"]]
+}, {
+  area: "人間関係",
+  en: "RELATION",
+  text: "知らない人ばかりの場に来てしまった。最初にしたのは——",
+  opts: [["この場は何の場かを見て把握する", "O"], ["誰かに話しかけて輪に入る", "Y"], ["飲み物を取りに動く", "E"], ["この集まり自体に意味を見いだせず帰りたくなる", "D"], ["壁際で時間が過ぎるのを待つ", "A"]]
+}];
+const AREAS = [["日常", "EVERYDAY"], ["仕事", "WORK"], ["危機", "CRISIS"], ["人間関係", "RELATION"], ["お金", "MONEY"], ["AI", "AI"]];
 
 /* ---------- 立体球の浮遊ネットワーク ---------- */
-function Network({ counts }) {
+function Network({
+  counts
+}) {
   const canvasRef = useRef(null);
   const rafRef = useRef(0);
-
-  const reduced = typeof window !== "undefined" &&
-    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
+  const reduced = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
-    let W = 0, H = 0;
+    let W = 0,
+      H = 0;
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
-      W = rect.width; H = rect.height;
-      canvas.width = W * DPR; canvas.height = H * DPR;
+      W = rect.width;
+      H = rect.height;
+      canvas.width = W * DPR;
+      canvas.height = H * DPR;
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     };
     resize();
     window.addEventListener("resize", resize);
-
-    const hexToRgb = (h) => {
+    const hexToRgb = h => {
       const n = parseInt(h.slice(1), 16);
-      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+      return [n >> 16 & 255, n >> 8 & 255, n & 255];
     };
-
-    const max = Math.max(1, ...ORDER.map((k) => counts[k] || 0));
-    const cx0 = W / 2, cy0 = H / 2;
+    const max = Math.max(1, ...ORDER.map(k => counts[k] || 0));
+    const TOTAL = ORDER.reduce((s, k) => s + (counts[k] || 0), 0) || 10;
+    const cx0 = W / 2,
+      cy0 = H / 2;
     let nodes = ORDER.map((k, i) => {
       const n = counts[k] || 0;
-      const ang = (i / ORDER.length) * Math.PI * 2;
-      const r = 22 + (n / max) * 40;
-      return { k, n, r, rgb: hexToRgb(TYPES[k].color),
-        x: cx0 + Math.cos(ang) * 130, y: cy0 + Math.sin(ang) * 130,
-        vx: 0, vy: 0, phase: Math.random() * Math.PI * 2 };
+      const ang = i / ORDER.length * Math.PI * 2;
+      const r = 22 + n / max * 40;
+      return {
+        k,
+        n,
+        r,
+        rgb: hexToRgb(TYPES[k].color),
+        x: cx0 + Math.cos(ang) * 130,
+        y: cy0 + Math.sin(ang) * 130,
+        vx: 0,
+        vy: 0,
+        phase: Math.random() * Math.PI * 2
+      };
     });
-
     let t = 0;
     const step = () => {
       t += 0.016;
-      const cx = W / 2, cy = H / 2;
+      const cx = W / 2,
+        cy = H / 2;
       for (let i = 0; i < nodes.length; i++) {
         const a = nodes[i];
         a.vx += (cx - a.x) * 0.0005;
         a.vy += (cy - a.y) * 0.0005;
         for (let j = i + 1; j < nodes.length; j++) {
           const b = nodes[j];
-          let dx = a.x - b.x, dy = a.y - b.y;
+          let dx = a.x - b.x,
+            dy = a.y - b.y;
           let d = Math.hypot(dx, dy) || 0.01;
           const min = a.r + b.r + 30;
           if (d < min) {
             const f = (min - d) / d * 0.035;
-            dx *= f; dy *= f;
-            a.vx += dx; a.vy += dy; b.vx -= dx; b.vy -= dy;
+            dx *= f;
+            dy *= f;
+            a.vx += dx;
+            a.vy += dy;
+            b.vx -= dx;
+            b.vy -= dy;
           }
         }
         if (!reduced) {
@@ -180,25 +445,41 @@ function Network({ counts }) {
         }
       }
       for (const a of nodes) {
-        a.vx *= 0.93; a.vy *= 0.93; a.x += a.vx; a.y += a.vy;
+        a.vx *= 0.93;
+        a.vy *= 0.93;
+        a.x += a.vx;
+        a.y += a.vy;
         const pad = a.r + 10;
-        if (a.x < pad) { a.x = pad; a.vx *= -0.5; }
-        if (a.x > W - pad) { a.x = W - pad; a.vx *= -0.5; }
-        if (a.y < pad) { a.y = pad; a.vy *= -0.5; }
-        if (a.y > H - pad) { a.y = H - pad; a.vy *= -0.5; }
+        if (a.x < pad) {
+          a.x = pad;
+          a.vx *= -0.5;
+        }
+        if (a.x > W - pad) {
+          a.x = W - pad;
+          a.vx *= -0.5;
+        }
+        if (a.y < pad) {
+          a.y = pad;
+          a.vy *= -0.5;
+        }
+        if (a.y > H - pad) {
+          a.y = H - pad;
+          a.vy *= -0.5;
+        }
       }
-
       ctx.clearRect(0, 0, W, H);
       // 線(淡く、脈打つ)
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
-          const a = nodes[i], b = nodes[j];
+          const a = nodes[i],
+            b = nodes[j];
           const s = a.n + b.n;
           if (s === 0) continue;
           const pulse = reduced ? 0.5 : 0.5 + 0.5 * Math.sin(t * 0.7 + (i + j));
           const alpha = Math.min(0.16, 0.03 + s * 0.012) * (0.6 + 0.4 * pulse);
           ctx.beginPath();
-          ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
           ctx.strokeStyle = `rgba(34,33,30,${alpha})`;
           ctx.lineWidth = 0.6;
           ctx.stroke();
@@ -210,7 +491,8 @@ function Network({ counts }) {
         const rr = a.r + breathe;
         const [R, Gg, B] = a.rgb;
         const empty = a.n === 0;
-        const ox = -rr * 0.32, oy = -rr * 0.34; // ハイライト位置(左上から光)
+        const ox = -rr * 0.32,
+          oy = -rr * 0.34; // ハイライト位置(左上から光)
         // 影(下に落とす)
         if (!empty) {
           ctx.beginPath();
@@ -254,69 +536,116 @@ function Network({ counts }) {
         ctx.fillText(TYPES[a.k].en, a.x, a.y + rr + 12);
         ctx.globalAlpha = empty ? 0.22 : 0.5;
         ctx.font = "10px 'Hiragino Mincho ProN',serif";
-        ctx.fillText(TYPES[a.k].jp, a.x, a.y + rr + 25);
+        ctx.fillText(TYPES[a.k].jp, a.x, a.y + rr + 24);
+        // 選択回数 / 総問数
+        ctx.globalAlpha = empty ? 0.3 : 0.6;
+        ctx.font = "8px 'SF Mono','Menlo',monospace";
+        ctx.fillText(`${a.n}/${TOTAL}`, a.x, a.y + rr + 36);
         ctx.globalAlpha = 1;
       }
       rafRef.current = requestAnimationFrame(step);
     };
     step();
-    return () => { cancelAnimationFrame(rafRef.current); window.removeEventListener("resize", resize); };
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("resize", resize);
+    };
   }, [counts, reduced]);
-
-  return <canvas ref={canvasRef} style={{ width: "100%", height: "100%", display: "block" }} />;
+  return /*#__PURE__*/React.createElement("canvas", {
+    ref: canvasRef,
+    style: {
+      width: "100%",
+      height: "100%",
+      display: "block"
+    }
+  });
 }
-
 function App() {
   const [stage, setStage] = useState("intro");
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState([]);
-
-  const shuffledOpts = useMemo(() =>
-    Q.map((q) => {
-      const arr = q.opts.map((o) => [o, Math.random()]);
-      arr.sort((a, b) => a[1] - b[1]);
-      return arr.map(([o]) => o);
-    }), []);
-
-  const choose = (type) => {
-    const next = [...answers, { type, area: Q[idx].area }];
+  const [worry, setWorry] = useState("");
+  const [worryResult, setWorryResult] = useState(null);
+  const [worryLoading, setWorryLoading] = useState(false);
+  const [worryError, setWorryError] = useState(false);
+  const [loadingLine, setLoadingLine] = useState(0);
+  const shuffledOpts = useMemo(() => Q.map(q => {
+    const arr = q.opts.map(o => [o, Math.random()]);
+    arr.sort((a, b) => a[1] - b[1]);
+    return arr.map(([o]) => o);
+  }), []);
+  const choose = type => {
+    const next = [...answers, {
+      type,
+      area: Q[idx].area
+    }];
     setAnswers(next);
-    if (idx + 1 < Q.length) setIdx(idx + 1); else setStage("result");
+    if (idx + 1 < Q.length) setIdx(idx + 1);else setStage("result");
   };
-  const back = () => { if (idx === 0) return; setIdx(idx - 1); setAnswers(answers.slice(0, -1)); };
-  const restart = () => { setStage("intro"); setIdx(0); setAnswers([]); };
-
+  const back = () => {
+    if (idx === 0) return;
+    setIdx(idx - 1);
+    setAnswers(answers.slice(0, -1));
+  };
+  const restart = () => {
+    setStage("intro");
+    setIdx(0);
+    setAnswers([]);
+    setWorry("");
+    setWorryResult(null);
+  };
   const result = useMemo(() => {
     if (answers.length === 0) return null;
-    const counts = {}; ORDER.forEach((k) => counts[k] = 0);
-    answers.forEach((a) => counts[a.type]++);
-    const opp = {}; ORDER.forEach((k) => opp[k] = 0);
-    Q.forEach((q) => { const s = new Set(); q.opts.forEach(([, t]) => s.add(t)); s.forEach((t) => opp[t]++); });
-    const rate = {}; ORDER.forEach((k) => rate[k] = opp[k] > 0 ? counts[k] / opp[k] : 0);
-    const ranked = Object.entries(counts).sort((a, b) =>
-      rate[b[0]] !== rate[a[0]] ? rate[b[0]] - rate[a[0]] : b[1] - a[1]);
+    const counts = {};
+    ORDER.forEach(k => counts[k] = 0);
+    answers.forEach(a => counts[a.type]++);
+    const opp = {};
+    ORDER.forEach(k => opp[k] = 0);
+    Q.forEach(q => {
+      const s = new Set();
+      q.opts.forEach(([, t]) => s.add(t));
+      s.forEach(t => opp[t]++);
+    });
+    const rate = {};
+    ORDER.forEach(k => rate[k] = opp[k] > 0 ? counts[k] / opp[k] : 0);
+    const ranked = Object.entries(counts).sort((a, b) => rate[b[0]] !== rate[a[0]] ? rate[b[0]] - rate[a[0]] : b[1] - a[1]);
     const byArea = {};
     AREAS.forEach(([ar]) => {
-      const inArea = answers.filter((a) => a.area === ar);
+      const inArea = answers.filter(a => a.area === ar);
       if (!inArea.length) return;
-      const c = {}; inArea.forEach((a) => c[a.type] = (c[a.type] || 0) + 1);
+      const c = {};
+      inArea.forEach(a => c[a.type] = (c[a.type] || 0) + 1);
       byArea[ar] = Object.entries(c).sort((x, y) => y[1] - x[1])[0][0];
     });
-    return { counts, ranked, byArea,
-      primary: ranked[0][0], secondary: ranked[1][1] > 0 ? ranked[1][0] : null,
-      spread: ranked.filter((r) => r[1] > 0).length };
+    return {
+      counts,
+      ranked,
+      byArea,
+      primary: ranked[0][0],
+      secondary: ranked[1][1] > 0 ? ranked[1][0] : null,
+      spread: ranked.filter(r => r[1] > 0).length
+    };
   }, [answers]);
-
   const FONT = "'Hiragino Mincho ProN','Yu Mincho',serif";
   const MONO = "'SF Mono','Menlo',monospace";
-  const eyebrow = (txt) => (
-    <div style={{ fontFamily: MONO, fontSize: 10, letterSpacing: 4, opacity: 0.45 }}>{txt}</div>
-  );
-
-  return (
-    <div style={{ minHeight: "100vh", background: "#FBFAF7", color: INK, fontFamily: FONT }}>
-      <style>{`
+  const eyebrow = txt => /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: MONO,
+      fontSize: 10,
+      letterSpacing: 4,
+      opacity: 0.45
+    }
+  }, txt);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: "#FBFAF7",
+      color: INK,
+      fontFamily: FONT
+    }
+  }, /*#__PURE__*/React.createElement("style", null, `
         @keyframes fadeIn { from {opacity:0; transform:translateY(6px);} to {opacity:1; transform:none;} }
+        @keyframes pulse { 0%,100%{opacity:.25; transform:scale(1);} 50%{opacity:.7; transform:scale(1.4);} }
         .fade { animation: fadeIn .45s ease both; }
         .opt { transition: padding-left .25s, opacity .2s; opacity:.82; }
         .opt:hover { padding-left: 22px !important; opacity:1; }
@@ -324,178 +653,918 @@ function App() {
         .mono { font-family:${MONO}; }
         button { font-family: inherit; }
         @media (prefers-reduced-motion: reduce){ .fade{animation:none;} }
-      `}</style>
-
-      <div style={{ maxWidth: 600, margin: "0 auto", padding: "0 28px" }}>
-
-        {/* INTRO */}
-        {stage === "intro" && (
-          <div className="fade" style={{ paddingTop: 120, paddingBottom: 90 }}>
-            {eyebrow("OS ANTHROPOLOGY")}
-            <h1 style={{ fontFamily: MONO, fontSize: 30, fontWeight: 400, margin: "26px 0 6px", letterSpacing: 2, lineHeight: 1.3 }}>
-              THE ABSENCE<br />FIELD KIT
-            </h1>
-            <div style={{ fontSize: 13, opacity: 0.55, letterSpacing: 1, marginBottom: 40 }}>
-              10の不在に、あなたは何をするか
-            </div>
-            <div style={{ width: 32, height: 1, background: INK, opacity: 0.3, marginBottom: 36 }} />
-            <p style={{ fontSize: 13, lineHeight: 2.1, opacity: 0.7 }}>
-              日常に空白が開いた10の場面。そのとき最初にした一手を選んでください。正解はありません。
-            </p>
-            <p style={{ fontSize: 12, lineHeight: 2, opacity: 0.5, marginTop: 20 }}>
-              これは診断ではなく、第一反射のクセを観察するための鏡です。人は8つの動作すべてを持っています。
-              違うのは「どれを持つか」ではなく「どの順に出るか」。
-            </p>
-            <button onClick={() => setStage("quiz")}
-              style={{ marginTop: 46, padding: "14px 0", width: "100%", background: "transparent",
-                color: INK, border: `1px solid ${INK}`, fontFamily: MONO, fontSize: 13, letterSpacing: 5, cursor: "pointer" }}>
-              BEGIN
-            </button>
-            <div className="mono" style={{ marginTop: 16, fontSize: 10, opacity: 0.38, letterSpacing: 2 }}>
-              10 QUESTIONS / 2 MIN / NO DATA SAVED
-            </div>
-          </div>
-        )}
-
-        {/* QUIZ */}
-        {stage === "quiz" && (
-          <div style={{ paddingTop: 72, paddingBottom: 90 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 22 }}>
-              <span className="mono" style={{ fontSize: 10, letterSpacing: 3, opacity: 0.55 }}>
-                {String(idx + 1).padStart(2, "0")} / 10 · {Q[idx].en}
-              </span>
-              {idx > 0 && (
-                <button onClick={back} className="mono"
-                  style={{ background: "none", border: "none", color: INK, opacity: 0.4, fontSize: 10, cursor: "pointer", letterSpacing: 1 }}>
-                  ← BACK
-                </button>
-              )}
-            </div>
-            <div style={{ display: "flex", gap: 4, marginBottom: 44 }}>
-              {Q.map((_, i) => (
-                <div key={i} style={{ flex: 1, height: 1, background: INK, opacity: i <= idx ? 0.75 : 0.12, transition: "opacity .3s" }} />
-              ))}
-            </div>
-            <div className="fade" key={idx}>
-              <h2 style={{ fontSize: 19, fontWeight: 600, lineHeight: 1.8, marginBottom: 38, letterSpacing: 0.5 }}>
-                {Q[idx].text}
-              </h2>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                {shuffledOpts[idx].map(([label, type], i) => (
-                  <button key={i} className="opt" onClick={() => choose(type)}
-                    style={{ textAlign: "left", padding: "18px 0 18px 8px", background: "none",
-                      border: "none", borderTop: i === 0 ? `1px solid rgba(34,33,30,0.12)` : "none",
-                      borderBottom: `1px solid rgba(34,33,30,0.12)`, fontSize: 14, lineHeight: 1.7,
-                      cursor: "pointer", color: INK }}>
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* RESULT */}
-        {stage === "result" && result && (
-          <div className="fade" style={{ paddingTop: 64, paddingBottom: 110 }}>
-            {eyebrow("OBSERVATION · NOT A DIAGNOSIS")}
-            <h1 style={{ fontFamily: MONO, fontSize: 18, fontWeight: 400, margin: "16px 0 2px", letterSpacing: 2 }}>
-              YOUR FIRST-RESPONSE FIELD
-            </h1>
-            <div style={{ fontSize: 11, opacity: 0.5, letterSpacing: 1, marginBottom: 24 }}>
-              あなたの第一反射の傾向
-            </div>
-
-            <p style={{ fontSize: 17, lineHeight: 1.8, marginBottom: 8, letterSpacing: 0.5 }}>
-              {blendText(result.primary, result.secondary)}
-            </p>
-            <p className="mono" style={{ fontSize: 10, opacity: 0.5, letterSpacing: 1 }}>
-              {TYPES[result.primary].en}{result.secondary ? ` × ${TYPES[result.secondary].en}` : ""}
-              {"   ·   "}{result.spread} / 8 OBSERVED
-            </p>
-
-            <div style={{ margin: "30px 0 12px", height: 440, position: "relative", overflow: "hidden",
-              border: `1px solid rgba(34,33,30,0.08)`, borderRadius: 3,
-              background: "radial-gradient(circle at 50% 42%, rgba(34,33,30,0.015), transparent 72%)" }}>
-              <Network counts={result.counts} />
-              <div className="mono" style={{ position: "absolute", top: 14, left: 16, fontSize: 9, letterSpacing: 2, opacity: 0.38 }}>
-                OS FIELD
-              </div>
-            </div>
-            <p style={{ fontSize: 11, lineHeight: 2, opacity: 0.5, marginBottom: 44 }}>
-              球の大きさは、その動作を選んだ回数。OSは固定された点ではなく、互いに繋がり絶えず動いている。
-              大きい球も小さい球も、すべてあなたの中にある。
-            </p>
-
-            {/* 領域別 */}
-            <div className="mono" style={{ fontSize: 10, letterSpacing: 2, opacity: 0.5, marginBottom: 16 }}>
-              FIELD BY CONTEXT
-            </div>
-            <div style={{ borderTop: `1px solid rgba(34,33,30,0.12)`, marginBottom: 44 }}>
-              {AREAS.filter(([a]) => result.byArea[a]).map(([a, en]) => (
-                <div key={a} style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
-                  padding: "13px 0", borderBottom: `1px solid rgba(34,33,30,0.12)` }}>
-                  <span className="mono" style={{ fontSize: 10, letterSpacing: 1, opacity: 0.5 }}>{en}</span>
-                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ width: 8, height: 8, borderRadius: "50%", background: TYPES[result.byArea[a]].color }} />
-                    <span className="mono" style={{ fontSize: 12, letterSpacing: 1 }}>{TYPES[result.byArea[a]].en}</span>
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <div style={{ borderLeft: `1px solid ${INK}`, paddingLeft: 18, fontSize: 12.5,
-              lineHeight: 2.2, opacity: 0.72, marginBottom: 40 }}>
-              これはあなたという人間のラベルではありません。今この時期の、初期設定値です。
-              「私は◯◯型だ」と名乗った瞬間、それは観察ではなく思い込みに変わります。
-              設定は書き換えられます——第一反射を観察し、あえて第二反射から始めてみること。それが自分OSの編集です。
-            </div>
-
-            <div style={{ display: "flex", borderTop: `1px solid ${INK}` }}>
-              <button onClick={() => copyResult(result)} className="mono"
-                style={{ flex: 1, padding: "15px 0", background: "none", border: "none",
-                  borderRight: `1px solid rgba(34,33,30,0.18)`, fontSize: 11, letterSpacing: 3, cursor: "pointer", color: INK }}>
-                COPY
-              </button>
-              <button onClick={restart} className="mono"
-                style={{ flex: 1, padding: "15px 0", background: "none", border: "none",
-                  fontSize: 11, letterSpacing: 3, cursor: "pointer", color: INK, opacity: 0.55 }}>
-                AGAIN
-              </button>
-            </div>
-            <div className="mono" style={{ marginTop: 24, fontSize: 9, opacity: 0.32, lineHeight: 2, letterSpacing: 1 }}>
-              OS ANTHROPOLOGY v2.1 — an observation protocol, not a tool for ranking people.<br />
-              WHERE VERSE INC.
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+      `), /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 600,
+      margin: "0 auto",
+      padding: "0 28px"
+    }
+  }, stage === "intro" && /*#__PURE__*/React.createElement("div", {
+    className: "fade",
+    style: {
+      paddingTop: 120,
+      paddingBottom: 90
+    }
+  }, eyebrow("OS ANTHROPOLOGY"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontFamily: MONO,
+      fontSize: 30,
+      fontWeight: 400,
+      margin: "26px 0 6px",
+      letterSpacing: 2,
+      lineHeight: 1.3
+    }
+  }, "THE ABSENCE", /*#__PURE__*/React.createElement("br", null), "FIELD KIT"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      opacity: 0.55,
+      letterSpacing: 1,
+      marginBottom: 40
+    }
+  }, "10の不在に、あなたは何をするか"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 32,
+      height: 1,
+      background: INK,
+      opacity: 0.3,
+      marginBottom: 36
+    }
+  }), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 13,
+      lineHeight: 2.1,
+      opacity: 0.7
+    }
+  }, "日常に空白が開いた10の場面。そのとき最初にした一手を選んでください。正解はありません。"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 12,
+      lineHeight: 2,
+      opacity: 0.5,
+      marginTop: 20
+    }
+  }, "これは診断ではなく、第一反射のクセを観察するための鏡です。人は8つの動作すべてを持っています。 違うのは「どれを持つか」ではなく「どの順に出るか」。"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setStage("quiz"),
+    style: {
+      marginTop: 46,
+      padding: "14px 0",
+      width: "100%",
+      background: "transparent",
+      color: INK,
+      border: `1px solid ${INK}`,
+      fontFamily: MONO,
+      fontSize: 13,
+      letterSpacing: 5,
+      cursor: "pointer"
+    }
+  }, "BEGIN"), /*#__PURE__*/React.createElement("div", {
+    className: "mono",
+    style: {
+      marginTop: 16,
+      fontSize: 10,
+      opacity: 0.38,
+      letterSpacing: 2
+    }
+  }, "10 QUESTIONS / 2 MIN / NO DATA SAVED")), stage === "quiz" && /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingTop: 72,
+      paddingBottom: 90
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "baseline",
+      marginBottom: 22
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "mono",
+    style: {
+      fontSize: 10,
+      letterSpacing: 3,
+      opacity: 0.55
+    }
+  }, String(idx + 1).padStart(2, "0"), " / 10 · ", Q[idx].en), idx > 0 && /*#__PURE__*/React.createElement("button", {
+    onClick: back,
+    className: "mono",
+    style: {
+      background: "none",
+      border: "none",
+      color: INK,
+      opacity: 0.4,
+      fontSize: 10,
+      cursor: "pointer",
+      letterSpacing: 1
+    }
+  }, "← BACK")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 4,
+      marginBottom: 44
+    }
+  }, Q.map((_, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      flex: 1,
+      height: 1,
+      background: INK,
+      opacity: i <= idx ? 0.75 : 0.12,
+      transition: "opacity .3s"
+    }
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "fade",
+    key: idx
+  }, /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontSize: 19,
+      fontWeight: 600,
+      lineHeight: 1.8,
+      marginBottom: 38,
+      letterSpacing: 0.5
+    }
+  }, Q[idx].text), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column"
+    }
+  }, shuffledOpts[idx].map(([label, type], i) => /*#__PURE__*/React.createElement("button", {
+    key: i,
+    className: "opt",
+    onClick: () => choose(type),
+    style: {
+      textAlign: "left",
+      padding: "18px 0 18px 8px",
+      background: "none",
+      border: "none",
+      borderTop: i === 0 ? `1px solid rgba(34,33,30,0.12)` : "none",
+      borderBottom: `1px solid rgba(34,33,30,0.12)`,
+      fontSize: 14,
+      lineHeight: 1.7,
+      cursor: "pointer",
+      color: INK
+    }
+  }, label))))), stage === "result" && result && /*#__PURE__*/React.createElement("div", {
+    className: "fade",
+    style: {
+      paddingTop: 64,
+      paddingBottom: 110
+    }
+  }, eyebrow("OBSERVATION · NOT A DIAGNOSIS"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontFamily: MONO,
+      fontSize: 18,
+      fontWeight: 400,
+      margin: "16px 0 2px",
+      letterSpacing: 2
+    }
+  }, "YOUR FIRST-RESPONSE FIELD"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      opacity: 0.5,
+      letterSpacing: 1,
+      marginBottom: 24
+    }
+  }, "あなたの第一反射の傾向"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 17,
+      lineHeight: 1.8,
+      marginBottom: 8,
+      letterSpacing: 0.5
+    }
+  }, blendText(result.primary, result.secondary)), /*#__PURE__*/React.createElement("p", {
+    className: "mono",
+    style: {
+      fontSize: 10,
+      opacity: 0.5,
+      letterSpacing: 1
+    }
+  }, TYPES[result.primary].en, result.secondary ? ` × ${TYPES[result.secondary].en}` : "", "   ·   ", result.spread, " / 8 OBSERVED"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      margin: "30px 0 12px",
+      height: 440,
+      position: "relative",
+      overflow: "hidden",
+      border: `1px solid rgba(34,33,30,0.08)`,
+      borderRadius: 3,
+      background: "radial-gradient(circle at 50% 42%, rgba(34,33,30,0.015), transparent 72%)"
+    }
+  }, /*#__PURE__*/React.createElement(Network, {
+    counts: result.counts
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "mono",
+    style: {
+      position: "absolute",
+      top: 14,
+      left: 16,
+      fontSize: 9,
+      letterSpacing: 2,
+      opacity: 0.38
+    }
+  }, "OS FIELD · 全10問の内訳")), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 11,
+      lineHeight: 2,
+      opacity: 0.5,
+      marginBottom: 44
+    }
+  }, "球の大きさは、全10問のうちその動作を選んだ回数。OSは固定された点ではなく、互いに繋がり絶えず動いている。 大きい球も小さい球も、すべてあなたの中にある。"), /*#__PURE__*/React.createElement("div", {
+    className: "mono",
+    style: {
+      fontSize: 10,
+      letterSpacing: 2,
+      opacity: 0.5,
+      marginBottom: 16
+    }
+  }, "FIELD BY CONTEXT"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderTop: `1px solid rgba(34,33,30,0.12)`,
+      marginBottom: 44
+    }
+  }, AREAS.filter(([a]) => result.byArea[a]).map(([a, en]) => /*#__PURE__*/React.createElement("div", {
+    key: a,
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "13px 0",
+      borderBottom: `1px solid rgba(34,33,30,0.12)`
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 2
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "mono",
+    style: {
+      fontSize: 10,
+      letterSpacing: 1,
+      opacity: 0.5
+    }
+  }, en), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11,
+      opacity: 0.4
+    }
+  }, a)), /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: 8,
+      height: 8,
+      borderRadius: "50%",
+      background: TYPES[result.byArea[a]].color
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-end",
+      gap: 1
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "mono",
+    style: {
+      fontSize: 12,
+      letterSpacing: 1
+    }
+  }, TYPES[result.byArea[a]].en), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11,
+      opacity: 0.5
+    }
+  }, TYPES[result.byArea[a]].jp, "型")))))), /*#__PURE__*/React.createElement("div", {
+    className: "mono",
+    style: {
+      fontSize: 10,
+      letterSpacing: 2,
+      opacity: 0.5,
+      marginBottom: 16
+    }
+  }, "LOOKBACK ── 過去を、もう一度"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      border: `1px solid rgba(34,33,30,0.12)`,
+      borderRadius: 3,
+      padding: "20px 22px",
+      marginBottom: 18,
+      background: "rgba(255,255,255,0.4)"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      opacity: 0.45,
+      marginBottom: 8,
+      letterSpacing: 1
+    }
+  }, "思い当たること"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 14,
+      lineHeight: 2
+    }
+  }, LOOKBACK[result.primary])), /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderLeft: `2px solid ${TYPES[result.primary].color}`,
+      paddingLeft: 18,
+      marginBottom: 44
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mono",
+    style: {
+      fontSize: 10,
+      letterSpacing: 2,
+      opacity: 0.5,
+      marginBottom: 8
+    }
+  }, "RE-FRAME ── 見え方を変える"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 14,
+      lineHeight: 2
+    }
+  }, reframe(result.primary, result.secondary)), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 11.5,
+      lineHeight: 1.9,
+      opacity: 0.55,
+      marginTop: 10
+    }
+  }, "同じ出来事でも、欠点として責めるか、初期設定の現れとして見るかで、過去の意味は変わります。")), /*#__PURE__*/React.createElement("div", {
+    className: "mono",
+    style: {
+      fontSize: 10,
+      letterSpacing: 2,
+      opacity: 0.5,
+      marginBottom: 18
+    }
+  }, "NEXT ── 観察の次に、何をするか"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 18
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "baseline",
+      gap: 8,
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: 9,
+      height: 9,
+      borderRadius: "50%",
+      background: TYPES[result.primary].color
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "mono",
+    style: {
+      fontSize: 12,
+      letterSpacing: 1
+    }
+  }, TYPES[result.primary].en), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      opacity: 0.5
+    }
+  }, TYPES[result.primary].jp, "型 の伸ばし方")), /*#__PURE__*/React.createElement(Row, {
+    label: "強み",
+    body: PROFILE[result.primary].strength
+  }), /*#__PURE__*/React.createElement(Row, {
+    label: "過剰になると",
+    body: PROFILE[result.primary].risk
+  }), /*#__PURE__*/React.createElement(Row, {
+    label: "副が支える",
+    body: secondaryNote(result.primary, result.secondary)
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      border: `1px solid ${TYPES[result.primary].color}`,
+      borderRadius: 3,
+      padding: "18px 20px",
+      marginBottom: 40,
+      background: "rgba(255,255,255,0.5)"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mono",
+    style: {
+      fontSize: 10,
+      letterSpacing: 2,
+      opacity: 0.55,
+      marginBottom: 8
+    }
+  }, "TODAY'S EXPERIMENT ── 今日の実験"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 14,
+      lineHeight: 1.9
+    }
+  }, PROFILE[result.primary].exp), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 11.5,
+      lineHeight: 1.8,
+      opacity: 0.55,
+      marginTop: 10
+    }
+  }, "第一反射を止める必要はありません。一度だけ別の始め方を試すと、自分の初期設定が見えてきます。それが書き換えの最初の一歩です。")), /*#__PURE__*/React.createElement("div", {
+    className: "mono",
+    style: {
+      fontSize: 10,
+      letterSpacing: 2,
+      opacity: 0.5,
+      marginBottom: 12
+    }
+  }, "READ YOUR WORRY ── 今の悩みを、OSの視点で"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 12.5,
+      lineHeight: 1.9,
+      opacity: 0.6,
+      marginBottom: 14
+    }
+  }, "いま抱えている悩みを書いてみてください。答えは出しません。あなたの悩みが「どの不在への応答か」を、一緒に観察するだけです。"), /*#__PURE__*/React.createElement("textarea", {
+    value: worry,
+    onChange: e => setWorry(e.target.value),
+    placeholder: "例: なんとなく仕事に身が入らない。周りはちゃんとしているのに、自分だけ置いていかれている気がする。",
+    rows: 4,
+    style: {
+      width: "100%",
+      padding: "14px 16px",
+      fontSize: 14,
+      lineHeight: 1.8,
+      fontFamily: FONT,
+      color: INK,
+      background: "rgba(255,255,255,0.6)",
+      border: `1px solid rgba(34,33,30,0.2)`,
+      borderRadius: 3,
+      resize: "vertical",
+      outline: "none",
+      marginBottom: 12
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: async () => {
+      setWorryError(false);
+      setWorryResult(null);
+      setWorryLoading(true);
+      setLoadingLine(Math.floor(Math.random() * LOADING_LINES.length));
+      const hint = result ? `${TYPES[result.primary].jp}型 × ${result.secondary ? TYPES[result.secondary].jp + "型" : "—"}` : "";
+      const ai = await analyzeWorryAI(worry, hint);
+      if (ai && ai.type) {
+        setWorryResult({
+          ai
+        });
+      } else {
+        // フォールバック: キーワード版
+        const kw = analyzeWorry(worry);
+        if (kw) setWorryResult({
+          kw
+        });
+        setWorryError(true);
+      }
+      setWorryLoading(false);
+    },
+    disabled: worry.trim().length < 2 || worryLoading,
+    className: "mono",
+    style: {
+      width: "100%",
+      padding: "13px 0",
+      background: worry.trim().length < 2 || worryLoading ? "transparent" : INK,
+      color: worry.trim().length < 2 || worryLoading ? INK : "#FBFAF7",
+      border: `1px solid ${INK}`,
+      fontSize: 12,
+      letterSpacing: 3,
+      cursor: worry.trim().length < 2 || worryLoading ? "default" : "pointer",
+      opacity: worry.trim().length < 2 || worryLoading ? 0.35 : 1,
+      marginBottom: 18
+    }
+  }, worryLoading ? "READING ──" : "READ ── 読み解く"), worryLoading && /*#__PURE__*/React.createElement("div", {
+    className: "fade",
+    style: {
+      textAlign: "center",
+      padding: "24px 0 40px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "inline-flex",
+      gap: 5,
+      marginBottom: 18
+    }
+  }, [0, 1, 2].map(i => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    style: {
+      width: 6,
+      height: 6,
+      borderRadius: "50%",
+      background: INK,
+      opacity: 0.4,
+      animation: `pulse 1.4s ease-in-out ${i * 0.2}s infinite`
+    }
+  }))), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 13.5,
+      lineHeight: 2,
+      opacity: 0.6,
+      fontStyle: "normal"
+    }
+  }, LOADING_LINES[loadingLine])), worryResult && worryResult.ai && (() => {
+    const a = worryResult.ai;
+    const t = TYPES[a.type] ? a.type : "O";
+    const col = TYPES[t].color;
+    const tiers = [["表層", a.surface, 1.0], ["その奥", a.middle, 0.85], ["さらに奥", a.deep, 0.7]].filter(x => x[1]);
+    return /*#__PURE__*/React.createElement("div", {
+      className: "fade",
+      style: {
+        marginBottom: 44
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        border: `1px solid ${col}`,
+        borderRadius: 3,
+        padding: "18px 20px",
+        marginBottom: 14,
+        background: "rgba(255,255,255,0.5)"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "baseline",
+        gap: 8,
+        marginBottom: 6
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        width: 9,
+        height: 9,
+        borderRadius: "50%",
+        background: col
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      className: "mono",
+      style: {
+        fontSize: 11,
+        letterSpacing: 1
+      }
+    }, TYPES[t].en), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 12,
+        opacity: 0.55
+      }
+    }, "この悩みに表れている第一応答: ", TYPES[t].jp, "型")), a.type_reason && /*#__PURE__*/React.createElement("p", {
+      style: {
+        fontSize: 12.5,
+        lineHeight: 1.9,
+        opacity: 0.65,
+        marginBottom: 14
+      }
+    }, a.type_reason), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 0
+      }
+    }, tiers.map(([label, body, op], i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        display: "flex",
+        gap: 12,
+        paddingLeft: i * 14
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        width: 6,
+        height: 6,
+        borderRadius: "50%",
+        background: col,
+        opacity: op,
+        marginTop: 7
+      }
+    }), i < tiers.length - 1 && /*#__PURE__*/React.createElement("span", {
+      style: {
+        width: 1,
+        flex: 1,
+        background: "rgba(34,33,30,0.2)",
+        marginTop: 3
+      }
+    })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        paddingBottom: i < tiers.length - 1 ? 14 : 4
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "mono",
+      style: {
+        fontSize: 9,
+        letterSpacing: 1,
+        opacity: 0.4,
+        marginBottom: 3
+      }
+    }, label), /*#__PURE__*/React.createElement("p", {
+      style: {
+        fontSize: 13.5,
+        lineHeight: 1.9,
+        opacity: op
+      }
+    }, body))))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 8,
+        paddingTop: 14,
+        borderTop: "1px dashed rgba(34,33,30,0.2)"
+      }
+    }, /*#__PURE__*/React.createElement("p", {
+      style: {
+        fontSize: 12,
+        lineHeight: 1.9,
+        opacity: 0.6
+      }
+    }, DEEPEN_STOP))), a.gap_text && /*#__PURE__*/React.createElement("div", {
+      style: {
+        borderLeft: `2px solid ${INK}`,
+        paddingLeft: 16,
+        marginBottom: 16
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "mono",
+      style: {
+        fontSize: 10,
+        letterSpacing: 2,
+        opacity: 0.5,
+        marginBottom: 8
+      }
+    }, "TWO KINDS OF GAP ── 二種類のズレ"), /*#__PURE__*/React.createElement("p", {
+      style: {
+        fontSize: 13.5,
+        lineHeight: 2
+      }
+    }, a.gap_text)), a.insight && /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: "rgba(34,33,30,0.04)",
+        borderRadius: 3,
+        padding: "18px 20px",
+        marginBottom: 8
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "mono",
+      style: {
+        fontSize: 10,
+        letterSpacing: 2,
+        opacity: 0.5,
+        marginBottom: 8
+      }
+    }, "INSIGHT"), /*#__PURE__*/React.createElement("p", {
+      style: {
+        fontSize: 14,
+        lineHeight: 2
+      }
+    }, a.insight)), /*#__PURE__*/React.createElement("p", {
+      className: "mono",
+      style: {
+        fontSize: 10,
+        lineHeight: 1.8,
+        opacity: 0.4,
+        marginTop: 14,
+        letterSpacing: 1
+      }
+    }, "※ これは断定ではなく、あなたの悩みをOSの語彙で見直すための問いです。入力は保存されません。"));
+  })(), worryResult && worryResult.kw && /*#__PURE__*/React.createElement("div", {
+    className: "fade",
+    style: {
+      marginBottom: 44
+    }
+  }, worryError && /*#__PURE__*/React.createElement("p", {
+    className: "mono",
+    style: {
+      fontSize: 10,
+      opacity: 0.45,
+      marginBottom: 12,
+      letterSpacing: 1
+    }
+  }, "※ いま詳しい読み解きに接続できなかったため、簡易版を表示しています。"), worryResult.kw.hasSignal ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      border: `1px solid ${TYPES[worryResult.kw.top].color}`,
+      borderRadius: 3,
+      padding: "18px 20px",
+      marginBottom: 14,
+      background: "rgba(255,255,255,0.5)"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "baseline",
+      gap: 8,
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: 9,
+      height: 9,
+      borderRadius: "50%",
+      background: TYPES[worryResult.kw.top].color
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "mono",
+    style: {
+      fontSize: 11,
+      letterSpacing: 1
+    }
+  }, TYPES[worryResult.kw.top].en), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      opacity: 0.55
+    }
+  }, "この悩みに表れている第一応答: ", TYPES[worryResult.kw.top].jp, "型")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 0
+    }
+  }, [["表層", DEEPEN[worryResult.kw.top].surface, 1.0], ["その奥", DEEPEN[worryResult.kw.top].middle, 0.85], ["さらに奥", DEEPEN[worryResult.kw.top].deep, 0.7]].map(([label, body, op], i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: "flex",
+      gap: 12,
+      paddingLeft: i * 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: 6,
+      height: 6,
+      borderRadius: "50%",
+      background: TYPES[worryResult.kw.top].color,
+      opacity: op,
+      marginTop: 7
+    }
+  }), i < 2 && /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: 1,
+      flex: 1,
+      background: "rgba(34,33,30,0.2)",
+      marginTop: 3
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingBottom: i < 2 ? 14 : 4
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mono",
+    style: {
+      fontSize: 9,
+      letterSpacing: 1,
+      opacity: 0.4,
+      marginBottom: 3
+    }
+  }, label), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 13.5,
+      lineHeight: 1.9,
+      opacity: op
+    }
+  }, body))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 8,
+      paddingTop: 14,
+      borderTop: "1px dashed rgba(34,33,30,0.2)"
+    }
+  }, /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 12,
+      lineHeight: 1.9,
+      opacity: 0.6
+    }
+  }, DEEPEN_STOP))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderLeft: `2px solid ${INK}`,
+      paddingLeft: 16,
+      marginBottom: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mono",
+    style: {
+      fontSize: 10,
+      letterSpacing: 2,
+      opacity: 0.5,
+      marginBottom: 8
+    }
+  }, "TWO KINDS OF GAP ── 二種類のズレ"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 13.5,
+      lineHeight: 2
+    }
+  }, worryResult.kw.borrowed ? "この悩みには「みんな」「正しさ」への意識が強く出ています。近づこうとしている理想は、本当にあなた自身のものでしょうか。それとも、他人のOSから借りてきた理想かもしれません。だとしたら、近づくほど苦しくなります。埋めるのではなく、手放すと消えるズレかもしれません。" : "この悩みは、なりたい状態と今の状態のあいだの、近づけば縮まるズレに見えます。理想そのものは自前のようです。であれば、第一反射を少し変える小さな実験から、距離は縮められます。"))) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      border: `1px dashed rgba(34,33,30,0.25)`,
+      borderRadius: 3,
+      padding: "18px 20px"
+    }
+  }, /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 13.5,
+      lineHeight: 2,
+      opacity: 0.7
+    }
+  }, "この文からは、特定の第一応答をうまく読み取れませんでした。もう少し「最初に何をしたか/何を感じたか」を具体的に書くと、観察しやすくなります。")), /*#__PURE__*/React.createElement("p", {
+    className: "mono",
+    style: {
+      fontSize: 10,
+      lineHeight: 1.8,
+      opacity: 0.4,
+      marginTop: 14,
+      letterSpacing: 1
+    }
+  }, "※ これは断定ではなく、あなたの悩みをOSの語彙で見直すための問いです。入力は保存されません。")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderLeft: `1px solid ${INK}`,
+      paddingLeft: 18,
+      fontSize: 12.5,
+      lineHeight: 2.2,
+      opacity: 0.72,
+      marginBottom: 40
+    }
+  }, "これはあなたという人間のラベルではありません。今この時期の、初期設定値です。 「私は◯◯型だ」と名乗った瞬間、それは観察ではなく思い込みに変わります。 設定は書き換えられます——第一反射を観察し、あえて第二反射から始めてみること。それが自分OSの編集です。"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      borderTop: `1px solid ${INK}`
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => copyResult(result),
+    className: "mono",
+    style: {
+      flex: 1,
+      padding: "15px 0",
+      background: "none",
+      border: "none",
+      borderRight: `1px solid rgba(34,33,30,0.18)`,
+      fontSize: 11,
+      letterSpacing: 3,
+      cursor: "pointer",
+      color: INK
+    }
+  }, "COPY"), /*#__PURE__*/React.createElement("button", {
+    onClick: restart,
+    className: "mono",
+    style: {
+      flex: 1,
+      padding: "15px 0",
+      background: "none",
+      border: "none",
+      fontSize: 11,
+      letterSpacing: 3,
+      cursor: "pointer",
+      color: INK,
+      opacity: 0.55
+    }
+  }, "AGAIN")), /*#__PURE__*/React.createElement("div", {
+    className: "mono",
+    style: {
+      marginTop: 24,
+      fontSize: 9,
+      opacity: 0.32,
+      lineHeight: 2,
+      letterSpacing: 1
+    }
+  }, "OS ANTHROPOLOGY v2.1 — an observation protocol, not a tool for ranking people.", /*#__PURE__*/React.createElement("br", null), "WHERE VERSE INC."))));
 }
-
+function Row({
+  label,
+  body
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 14,
+      padding: "8px 0",
+      borderBottom: "1px solid rgba(34,33,30,0.08)"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      flex: "0 0 84px",
+      fontSize: 11,
+      opacity: 0.45,
+      paddingTop: 2
+    }
+  }, label), /*#__PURE__*/React.createElement("span", {
+    style: {
+      flex: 1,
+      fontSize: 13,
+      lineHeight: 1.8
+    }
+  }, body));
+}
 function copyResult(r) {
-  const lines = [
-    "OS ANTHROPOLOGY — First-response field",
-    `傾向: ${blendText(r.primary, r.secondary)}`,
-    `Primary: ${TYPES[r.primary].en} / Secondary: ${r.secondary ? TYPES[r.secondary].en : "—"}`,
-    `${r.spread} / 8 observed`,
-    "",
-    "By context:",
-    ...AREAS.filter(([a]) => r.byArea[a]).map(([a, en]) => `  ${en}: ${TYPES[r.byArea[a]].en}`),
-    "",
-    "※ Not a label. A current default — rewritable.",
-    "#OS人類学",
-  ].join("\n");
-  navigator.clipboard?.writeText(lines).then(
-    () => alert("Copied"),
-    () => alert("Copy failed")
-  );
+  const lines = ["OS ANTHROPOLOGY — First-response field", `傾向: ${blendText(r.primary, r.secondary)}`, `Primary: ${TYPES[r.primary].en} / Secondary: ${r.secondary ? TYPES[r.secondary].en : "—"}`, `${r.spread} / 8 observed`, "", "By context:", ...AREAS.filter(([a]) => r.byArea[a]).map(([a, en]) => `  ${en}: ${TYPES[r.byArea[a]].en}`), "", "※ Not a label. A current default — rewritable.", "#OS人類学"].join("\n");
+  navigator.clipboard?.writeText(lines).then(() => alert("Copied"), () => alert("Copy failed"));
 }
-
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<App />);
+root.render(React.createElement(App));
 </script>
 </body>
 </html>
