@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>この世に意味はない。意味は立ち上がるもの。｜OS人類学</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ground:#E7E8E3;
+    --ground-deep:#DEE0DA;
+    --ink:#232622;
+    --ink-soft:#4A4E47;
+    --muted:#7C8076;
+    --rule:#C8CBC2;
+    --brass:#8A7346;
+    --brass-pale:#B7A377;
+    --mincho:"Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+    --gothic:"Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+    --measure:37rem;
+  }
+
+  *{box-sizing:border-box;}
+
+  html{-webkit-text-size-adjust:100%;}
+
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:var(--gothic);
+    font-weight:400;
+    font-size:1.0625rem;
+    line-height:1.8;
+    letter-spacing:.045em;
+    font-feature-settings:"palt" 0;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:var(--measure);
+    margin:0 auto;
+    padding:0 1.75rem 12rem;
+  }
+
+  /* ---------- hero ---------- */
+
+  .hero{
+    padding:9rem 0 5.5rem;
+  }
+
+  .hero .eyebrow{
+    font-family:var(--gothic);
+    font-size:.7rem;
+    font-weight:500;
+    letter-spacing:.18em;
+    line-height:2;
+    color:var(--brass);
+    margin:0 0 4rem;
+  }
+
+  .hero h1{
+    font-feature-settings:"palt" 1;
+    font-family:var(--gothic);
+    font-weight:700;
+    font-size:clamp(1.6rem, 5.6vw, 2.3rem);
+    line-height:1.65;
+    letter-spacing:.005em;
+    margin:0 0 3rem;
+  }
+
+  .hero h1 .fade{color:var(--muted); font-weight:400;}
+
+  .hero .sub{
+    font-family:var(--gothic);
+    font-size:.85rem;
+    font-weight:400;
+    letter-spacing:.06em;
+    color:var(--muted);
+    margin:0;
+  }
+
+  /* ---------- section scaffolding ---------- */
+
+  .sec{
+    position:relative;
+    padding:6.5rem 0 0;
+  }
+
+  .sec::before{
+    content:"";
+    display:block;
+    width:2.5rem;
+    height:1px;
+    background:var(--rule);
+    margin-bottom:6.5rem;
+  }
+
+  .sec h2{
+    font-feature-settings:"palt" 1;
+    font-family:var(--gothic);
+    font-weight:700;
+    font-size:clamp(1.25rem, 4.2vw, 1.45rem);
+    line-height:1.75;
+    letter-spacing:.005em;
+    margin:0 0 3rem;
+  }
+
+  .sec h2 .num{
+    display:block;
+    font-family:var(--gothic);
+    font-size:.68rem;
+    font-weight:500;
+    letter-spacing:.16em;
+    color:var(--brass);
+    margin-bottom:1.2rem;
+  }
+
+  .sec h3{
+    font-family:var(--gothic);
+    font-weight:700;
+    font-size:1.05rem;
+    line-height:1.8;
+    letter-spacing:.005em;
+    color:var(--ink);
+    margin:4.5rem 0 2rem;
+  }
+
+  p{margin:0 0 2.5rem;}
+
+  strong{
+    font-weight:500;
+    border-bottom:1px solid var(--brass-pale);
+    padding-bottom:.1em;
+  }
+
+  /* ---------- margin note ---------- */
+
+  .absence{
+    font-family:var(--gothic);
+    font-size:.75rem;
+    line-height:1.9;
+    letter-spacing:.02em;
+    color:var(--muted);
+    margin:0 0 3.4rem;
+  }
+
+  .absence b{
+    display:block;
+    font-weight:500;
+    font-size:.63rem;
+    letter-spacing:.14em;
+    color:var(--brass);
+    margin-bottom:.6rem;
+  }
+
+  @media (min-width:1180px){
+    .absence{
+      position:absolute;
+      left:-15rem;
+      width:11.5rem;
+      margin:0;
+      text-align:right;
+      padding:.5rem 0 0;
+    }
+  }
+
+  /* ---------- pull line ---------- */
+
+  .pull{
+    font-feature-settings:"palt" 1;
+    font-family:var(--gothic);
+    font-weight:700;
+    font-size:clamp(1.08rem, 3.6vw, 1.22rem);
+    line-height:1.95;
+    letter-spacing:.01em;
+    color:var(--ink);
+    margin:4.5rem 0;
+    padding:0;
+    text-indent:0;
+  }
+
+  /* ---------- statement list ---------- */
+
+  .stmt{
+    list-style:none;
+    margin:0 0 2.8rem;
+    padding:0;
+  }
+
+  .stmt li{
+    display:flex;
+    gap:1.5rem;
+    align-items:baseline;
+    justify-content:space-between;
+    padding:1.5rem 0;
+    border-bottom:1px solid var(--rule);
+  }
+
+  .stmt li:first-child{border-top:1px solid var(--rule);}
+
+  .stmt .said{flex:1; line-height:1.9;}
+
+  .stmt .tag{
+    flex:none;
+    font-family:var(--gothic);
+    font-size:.72rem;
+    font-weight:500;
+    letter-spacing:.08em;
+    color:var(--brass);
+    white-space:nowrap;
+  }
+
+  /* ---------- cannot-do list ---------- */
+
+  .cant{margin:0; padding:0; list-style:none;}
+  .cant li{margin:0 0 3rem;}
+  .cant .head{
+    display:block;
+    font-family:var(--gothic);
+    font-size:1.02rem;
+    font-weight:700;
+    letter-spacing:.005em;
+    margin-bottom:.7rem;
+  }
+
+  /* ---------- closing stamp ---------- */
+
+  .stamp{
+    margin-top:6rem;
+    padding-top:2.2rem;
+    border-top:1px solid var(--rule);
+    font-family:var(--gothic);
+    font-size:.82rem;
+    line-height:2;
+    letter-spacing:.01em;
+    color:var(--muted);
+  }
+
+  .stamp b{
+    display:block;
+    font-size:.63rem;
+    font-weight:500;
+    letter-spacing:.14em;
+    color:var(--brass);
+    margin-bottom:.8rem;
+  }
+
+  /* ---------- motion ---------- */
+
+  .sec, .hero{opacity:0; transform:translateY(12px); transition:opacity .9s ease, transform .9s ease;}
+  .sec.in, .hero.in{opacity:1; transform:none;}
+
+  @media (prefers-reduced-motion:reduce){
+    .sec, .hero{opacity:1; transform:none; transition:none;}
+  }
+
+  @media (max-width:600px){
+    body{font-size:1rem; line-height:1.78;}
+    .wrap{padding:0 1.4rem 8rem;}
+    .hero{padding:6rem 0 4rem;}
+    .sec{padding:4.5rem 0 0;}
+    .sec::before{margin-bottom:4.5rem;}
+    .stmt li{flex-direction:column; gap:.5rem;}
+  }
+
+  :focus-visible{outline:2px solid var(--brass); outline-offset:3px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">OS ANTHROPOLOGY ／ OS人類学</p>
+    <h1><span class="fade">この世に意味はない。</span><br>意味は立ち上がるもの。</h1>
+    <p class="sub">はじめての人のための読み物</p>
+  </header>
+
+  <section class="sec">
+    <p class="absence"><b>この節の位置</b>この文章自身の地位</p>
+    <h2><span class="num">はじめに</span>この文章について</h2>
+    <p>この文章は、OS人類学という枠組みを、はじめての人に向けて説明するものです。専門用語はできるだけ使いません。読み終わったときに「これは何に使えるのか」「これは学問なのか」「この人は何をやっているのか」の三つに答えが出ているようにしました。</p>
+    <p>先に、この文章自身についてひとつ断っておきます。ここに書いてあることの大半は、まだ確かめ終わっていない仮説です。なぜそんなことをわざわざ書くのかは、後半で説明します。それがこの枠組みの中心にあるものだからです。</p>
+  </section>
+
+  <section class="sec">
+    <p class="absence"><b>扱う不在</b>「自分の身体を放置している」という落ち着かなさ</p>
+    <h2><span class="num">1</span>ジムの会員証の話</h2>
+    <p>ジムに入会したのに、三ヶ月で行かなくなった。よくある話です。</p>
+    <p>ふつうはこれを「意志が弱かった」と説明します。でも、少し観察してみます。</p>
+    <p>入会した日、その人は何をしたか。申込書を書き、会員証を受け取り、写真を撮られた。その日の帰り道、気分はよかったはずです。まだ一度も運動していないのに。</p>
+    <p>ここに手がかりがあります。もし目的が運動そのものだったなら、運動していない時点で気分がよくなる理由がない。よくなったということは、その日に何かが解決したということです。</p>
+    <p>何が解決したのか。おそらく「自分は自分の身体を放置している」という落ち着かなさです。それが、会員証を持っているという事実によって、いったん処理された。</p>
+    <p>そして三ヶ月後、行かなくなる。当然です。落ち着かなさはもう処理されているからです。</p>
+    <p>つまり、この人が買ったのは運動ではありません。<strong>運動していない自分についての落ち着かなさを、いったん止める装置</strong>を買った。装置が働いたので、運動は要らなくなった。</p>
+    <p>意志の強弱の話ではありません。買ったものと、使うつもりだったものが、最初から別だっただけです。</p>
+
+    <h3>もう一歩、追い込む</h3>
+    <p>この話をすると、たいてい三つの説明が出てきます。本人の意志が弱かった。仕事が忙しくて環境が悪かった。ジム側の仕組みが続かせる設計になっていなかった。</p>
+    <p>どれも間違いではありません。実際にその要素はあります。ただ、この三つには共通点があります。<strong>原因を自分の外側に置いている</strong>という点です。意志という自分の属性、環境、他人の設計。どれも「自分がどう動いたか」を飛び越して、責任の置き場所を先に決めています。</p>
+    <p>そして責任の置き場所が決まると、それ以上は見なくてよくなる。忙しかったから、で話が終わる。</p>
+    <p>この枠組みが最初に問うのは、そこではありません。問うのはこれです。</p>
+    <p class="pull">あの日、自分は何によって満たされたのか。</p>
+    <p>続かなかった理由ではなく、続けなくても平気になった理由の方です。入会した日の帰り道に何が起きたのか。何が静かになったのか。そこを見ないまま「次こそは続けよう」と決意しても、また同じ日に同じものが満たされて、また同じように終わります。</p>
+    <p>意志を強くする話でも、環境を整える話でもありません。<strong>自分が何に応えていたのかを、先に特定する</strong>という話です。</p>
+  </section>
+
+  <section class="sec">
+    <p class="absence"><b>扱う不在</b>あらゆる行動の手前にあるもの</p>
+    <h2><span class="num">2</span>「足りない」から動く</h2>
+    <p>いま使った見方を、一般化します。</p>
+    <p>人が何かをするとき、その手前には必ず「足りていない何か」があります。空腹があるから食べる。退屈があるから動画を見る。放置している感覚があるから入会する。</p>
+    <p>この「足りていない何か」を、この枠組みでは<strong>不在</strong>と呼びます。そして人のあらゆる行動を、<strong>不在への応答</strong>として観察します。</p>
+    <p>ここで大事なのは、行動そのものを見るのではなく、それが何に応えているのかを見る、という順序です。同じ「ジムに入る」という行動でも、応えている不在は人によって違います。運動不足に応えている人もいれば、生活の型が欲しい人も、人と会う口実が欲しい人もいる。行動が同じでも、応答としては別物です。</p>
+    <p>だから、行動の分類には意味がありません。分類すべきは、何に応えているかの方です。</p>
+  </section>
+
+  <section class="sec">
+    <p class="absence"><b>扱う不在</b>何をしても答えの出ない問い</p>
+    <h2><span class="num">3</span>二種類の解決</h2>
+    <p>もう一段だけ進めます。不在には、浅いものと深いものがあります。</p>
+    <p>浅いものは、実際に解決できます。腹が減ったら食べれば終わる。</p>
+    <p>深いものは、解決できません。「自分の人生に意味があるのか」「自分は誰かに必要とされているのか」といった問いは、何をしても終わりません。</p>
+    <p>人はこの深い方を、そのままでは抱えていられない。だから、深い問いを、解決できる浅い課題に<strong>置き換える</strong>ということをします。</p>
+    <p>「自分の人生に意味があるのか」は答えが出ない。でも「毎朝五時に起きる」は達成できる。だから後者に置き換える。達成すると、前者にも答えが出たような感覚になる。</p>
+    <p>これを<strong>閉鎖変換</strong>と呼びます。深い問いを浅い課題にすり替えて、達成感という形で決着を渡す仕組みです。</p>
+    <p>批判ではありません。人はこれなしには生きられません。資格、ブランド、肩書き、ダイエット、SNSの数字。世の中の商品とサービスの大半は、この仕組みで動いています。</p>
+    <p>一方で、これとは逆のことをする形式もあります。深い問いをすり替えずに、そのまま抱えられるようにするものです。答えは出ないし、達成感も渡さない。ただ、抱えている状態に形が与えられる。優れた芸術や、ある種の儀礼がこれに当たります。<strong>転形変換</strong>と呼びます。</p>
+    <p>この二つの区別が、この枠組みの最も実用的な部分です。</p>
+  </section>
+
+  <section class="sec">
+    <p class="absence"><b>扱う不在</b>先の見えなさ、死者との距離、この土地にいることの理由のなさ</p>
+    <h2><span class="num">4</span>祭りは、何も解決しない</h2>
+    <p>さきほどのジムの話と、正反対の例を出します。</p>
+    <p>祭りは、何も解決しません。神輿を担いでも作物は増えないし、病気も治らない。参加した人も、それは分かっています。</p>
+    <p>にもかかわらず、毎年やります。ここが決定的です。</p>
+    <p>もし祭りが何かを解決するものだったら、解決した時点で終わるはずです。ジムの会員証は一度で効きました。効いたので、それ以上は要らなくなった。祭りが終わらないということは、<strong>決着を渡していない</strong>ということです。</p>
+    <p>では何を渡しているのか。形です。</p>
+    <p>言葉にできないもの——先の見えなさ、死者との距離、自分がこの土地に置かれていることの理由のなさ。こういうものは、考えても答えが出ません。祭りはそれに答えを出しません。ただ、担ぐ、まわる、火を焚く、という形を与える。答えの出ないものを、抱えたままでいられる形にする。</p>
+    <p>だから終わらない。答えが出ていないので、来年もまた必要になる。</p>
+    <p class="pull">一回で終わるものは、決着を渡している。<br>終わらないものは、決着を渡していない。</p>
+    <p>「続かない」ことが失敗ではなく、続くことが仕様である形式が、たしかに存在します。</p>
+
+    <h3>建物ではなく、建てることが続いている</h3>
+    <p>伊勢神宮は、二十年ごとに社殿を建て替えます。だから建物としては、千年前のものが残っているわけではありません。</p>
+    <p>では何が千年続いているのか。<strong>建てるという行為の方</strong>です。</p>
+    <p>古い材を大事に保存する、という発想とは逆になっています。残っているのは物ではなく、繰り返されている作業と、それを次の代に渡す手つきの方です。物は毎回入れ替わってよい。むしろ入れ替えることが、続けることになっている。</p>
+    <p>ここから、ひとつ使える判定基準が出ます。</p>
+
+    <h3>代わりにやってもらえるか</h3>
+    <p>会員証は、他人に取りに行ってもらっても機能します。証明さえ手元に来ればいいからです。</p>
+    <p>祭りは、代わりに担いでもらったら、担いだことになりません。宮中の四方拝という儀礼には、代拝が認められない、という定めがあります。誰かに代行させたら、それは行われなかったことになる。</p>
+    <p>この差は、そのまま見分け方になります。</p>
+    <p class="pull">代わりにやってもらえるものは、決着を渡している。<br>代われないものは、形を渡している。</p>
+    <p>自分がやっていることが、どちらなのか。会社でやっている仕事、続けている習慣、参加している集まり。代行できるものは、たぶん何かの決着を買っています。代行できないものは、答えの出ないものを抱えるための形かもしれません。</p>
+    <p>どちらが上ということではありません。順位はつけません。ただ、<strong>どちらなのかを取り違えると、設計を間違えます。</strong> 決着を渡すつもりで代行不可の形式を作れば、面倒なだけのものになる。形を渡すつもりで代行可能にすれば、一回で終わって二度と来なくなる。</p>
+  </section>
+
+  <section class="sec">
+    <p class="absence"><b>扱う不在</b>買われているものと、売っているつもりのもののずれ</p>
+    <h2><span class="num">5</span>なぜ、良い商品が売れないのか</h2>
+    <p>ここまでの話は、そのまま仕事に使えます。</p>
+    <p>商品が売れるとき、買われているのは商品ではありません。それが埋めている何かです。そして、その「何か」を作り手が取り違えていることが、非常に多い。</p>
+    <p>高級腕時計は、時刻を知るために買われていません。時刻を知るだけならスマートフォンで足ります。では何が埋まっているのか。それを言い当てられないまま「精度」や「素材」で競争すると、良いものを作っているのに売れない、という事態になります。</p>
+    <p>逆に、埋めているものを正しく捉えている商品は、性能で劣っていても選ばれます。</p>
+    <p>ここで注意が要ります。「本当に埋めているもの」は、買った人に聞いても出てきません。本人も気づいていないことが多いからです。だから、言葉ではなく行動を見ます。何を買ったかではなく、買った後にどうしたか。使ったのか、置いたのか、人に見せたのか。</p>
+    <p>ジムの例で言えば、決め手は「行かなくなった」という事実の方です。本人が入会理由をどう説明しても、行動の方が先に答えを出しています。</p>
+  </section>
+
+  <section class="sec">
+    <p class="absence"><b>扱う不在</b>決まったように見えて、何も決まっていない状態</p>
+    <h2><span class="num">6</span>会議で起きていること</h2>
+    <p>もうひとつ、実務での使い道があります。会議やビジョン策定の場では、性質の違う文が同じ調子で並びます。</p>
+    <ul class="stmt">
+      <li><span class="said">「市場は今後こう動く」</span><span class="tag">推測</span></li>
+      <li><span class="said">「我々はこの領域に集中する」</span><span class="tag">決めごと</span></li>
+      <li><span class="said">「昨年の売上はこうだった」</span><span class="tag">事実</span></li>
+    </ul>
+    <p>この三つが混ざったまま議論が進むと、決まったように見えて何も決まっていない、という状態が生まれます。推測が事実のように扱われ、決めごとが自然の摂理のように語られる。</p>
+    <p>そこでこの枠組みでは、<strong>一文ごとに札を貼る</strong>ということをします。この文は推測、この文は決めごと、この文は確かめたこと。四つに分けて、毎回明記する。</p>
+    <p>札を貼る作業は、地味ですが効きます。推測に「推測」と書いた瞬間、その文の扱いが変わるからです。誰も反論できないほど壮大な言葉が、ただの推測だったと分かることもあります。</p>
+  </section>
+
+  <section class="sec">
+    <p class="absence"><b>扱う不在</b>正しさを決められないこと</p>
+    <h2><span class="num">7</span>これは学問なのか</h2>
+    <p>よく聞かれます。学問なのか、アートなのか、思想なのか。</p>
+    <p>この問いには答えません。答えられないからではなく、その問いでは何も決まらないからです。学問だと言えば信用が増すわけでも、アートだと言えば自由になるわけでもない。</p>
+    <p>代わりに立てているのは、こちらの問いです。</p>
+    <p class="pull">書いてあることの札は、正直か。</p>
+    <p>推測を「確かめたこと」と書いていないか。決めごとを「自然の事実」として語っていないか。この一点だけを規律にしています。</p>
+    <p>そしてもうひとつ。<strong>どうなったら、この枠組みは間違いだったと認めるか</strong>を、あらかじめ書いてあります。予測が外れたらこの条件で捨てる、という条項です。捨てる条件が書かれていない主張は、何が起きても生き延びてしまう。それは強いのではなく、単に確かめようがないということです。</p>
+    <p>ついでに正直に書いておくと、現時点で「確かめ終わった」と言える主張は、ひとつもありません。全部が仮説です。それも明記してあります。</p>
+  </section>
+
+  <section class="sec">
+    <p class="absence"><b>扱う不在</b>この枠組みの外側</p>
+    <h2><span class="num">8</span>できないこと</h2>
+    <p>最後に、この枠組みができないことを書きます。</p>
+    <ul class="cant">
+      <li><span class="head">人の内面は分かりません。</span>見ているのは行動だけです。「本当はこう思っている」という推測はしません。本人が言ったことは「本人がそう言った」という事実として扱い、それが正しいかどうかは別に置きます。</li>
+      <li><span class="head">処方は出しません。</span>何がどう機能しているかは記述しますが、こうすべきだとは言いません。処方を出した瞬間、推測が助言の顔をして出ていくことになるからです。</li>
+      <li><span class="head">どこまでも遡ることはしません。</span>「結局すべては幼少期の経験だ」「結局すべては経済構造だ」といった、何でも説明できてしまう地点に達したら、そこで止めます。何でも説明できる説明は、何も説明していないからです。</li>
+      <li><span class="head">優劣はつけません。</span>浅い解決より深い解決が上、という順位はつけません。どちらも人が生きるために使っている形式です。</li>
+    </ul>
+  </section>
+
+  <section class="sec">
+    <p class="absence"><b>この節の位置</b>要約</p>
+    <h2><span class="num">おわりに</span>まとめると</h2>
+    <p>人の行動は、何かが足りないことへの応答として観察できる。その「足りない何か」は、深いものほど解決できず、だから浅い課題に置き換えられる。世の中の制度も商品も、その置き換えの上に立っている。</p>
+    <p>そして、それを記述するときには、自分が今どの札の文を書いているのかを、毎回正直に申告する。</p>
+    <p>やっているのは、答えを出すことではなく、<strong>観察の手続きを作ること</strong>です。答えはまだ、ほとんど出ていません。</p>
+
+    <div class="stamp">
+      <b>この文章の地位</b>
+      本文に書かれた内容は、大半が検証前の仮説です。確かめ終わったと言える主張は、現時点でひとつもありません。反証の条件——どうなったらこの枠組みを捨てるか——は別途定めてあります。
+    </div>
+  </section>
+
+</div>
+
+<script>
+  (function(){
+    var targets = document.querySelectorAll('.hero, .sec');
+    if (!('IntersectionObserver' in window) ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      targets.forEach(function(el){ el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+    targets.forEach(function(el){ io.observe(el); });
+  })();
+</script>
+</body>
+</html>
