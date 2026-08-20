@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OS人類学 — 体験</title>
+<meta name="description" content="人を分類しません。仕事の形式を記述します。">
+<meta name="robots" content="noindex">
+<style>
+:root{
+  --ink:#16181A; --paper:#EDEDE8; --rule:#C9C9C2; --gray:#8C8F8B;
+  --sans:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic","Meiryo",sans-serif;
+  --mono:ui-monospace,"SFMono-Regular",Menlo,"IBM Plex Mono","Courier New",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);min-height:100vh;padding:44px 20px 88px;-webkit-text-size-adjust:100%}
+.wrap{max-width:720px;margin:0 auto}
+header{margin-bottom:40px}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--gray)}
+h1{font-size:25px;font-weight:600;letter-spacing:.06em;margin:10px 0 0}
+h2{font-size:20px;font-weight:600;letter-spacing:.05em;margin:0}
+p{margin:0}
+.lede{font-size:15px;line-height:2;max-width:560px;margin:0 0 34px}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--gray);margin-bottom:10px}
+.tag{font-family:var(--mono);font-size:10px;letter-spacing:.12em;border:1px solid var(--ink);padding:2px 7px;white-space:nowrap}
+.head-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+label.fld{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--gray);display:block;margin-bottom:12px}
+input.job{width:100%;background:transparent;border:none;border-bottom:1px solid var(--rule);font-family:var(--sans);font-size:22px;color:var(--ink);padding:6px 0 12px;letter-spacing:.04em;border-radius:0;-webkit-appearance:none}
+input.job::placeholder{color:#A9ABA6}
+input.job:focus{outline:none;border-bottom-color:var(--ink)}
+textarea{width:100%;background:transparent;border:1px solid var(--rule);font-family:var(--sans);font-size:14px;line-height:1.9;color:var(--ink);padding:14px 16px;resize:vertical;border-radius:0}
+button{font-family:var(--mono);font-size:12px;letter-spacing:.16em;padding:14px 26px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);cursor:pointer;border-radius:0}
+button[disabled]{background:transparent;color:var(--gray);border-color:var(--rule);cursor:default}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.block{border-top:1px solid var(--rule);padding:22px 0 24px;display:grid;grid-template-columns:minmax(78px,104px) 1fr;gap:20px;align-items:start}
+.block .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--gray);padding-top:4px}
+.block .bd{font-size:15px;line-height:2;letter-spacing:.02em}
+.box{border:1px solid var(--ink);padding:22px 24px;margin-top:26px}
+.note{font-size:12.5px;line-height:2;color:var(--gray);max-width:560px}
+.soft{font-size:13.5px;line-height:2;color:var(--gray);max-width:560px}
+.item{border-top:1px solid var(--rule);padding:20px 0;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+.item .n{font-family:var(--mono);font-size:10.5px;color:var(--gray);margin-right:12px}
+.item .t{font-size:14.5px;line-height:1.9}
+.choices{display:flex;gap:8px}
+.choices button{font-size:11px;letter-spacing:.1em;padding:9px 14px;background:transparent;color:var(--ink);border:1px solid var(--rule);white-space:nowrap}
+.choices button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.run{display:flex;align-items:center;gap:26px;margin-top:48px}
+.run .cap{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--gray);line-height:2.2}
+section{margin-bottom:56px}
+.hidden{display:none}
+@media (max-width:560px){
+  .block{grid-template-columns:1fr;gap:8px}
+  .block .lab{padding-top:0}
+  .item{grid-template-columns:1fr}
+  h1{font-size:22px}
+  input.job{font-size:19px}
+}
+@keyframes ray{0%{stroke-dashoffset:42;opacity:.12}45%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:-42;opacity:.12}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.fade{animation:fadeUp 520ms ease-out both}
+@media (prefers-reduced-motion:reduce){.fade{animation:none}.mark line{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">OS ANTHROPOLOGY</div>
+  <h1>OS人類学 — 体験</h1>
+</header>
+
+<section id="s-input">
+  <p class="lede">このフレームワークは、人を分類しません。仕事の<strong>形式</strong>を記述します。あなたの職業を入れると、その仕事が実際には何を供給しているかを、別の角度から書き出します。</p>
+  <label class="fld" for="job">あなたの職業</label>
+  <input class="job" id="job" placeholder="例：植木職人" autocomplete="off" enterkeyhint="go">
+  <p id="err" class="soft hidden" style="margin-top:16px"></p>
+  <div style="margin-top:30px"><button id="btn-run" disabled>解析する</button></div>
+  <div id="run1" class="run hidden">
+    <span id="mark1"></span>
+    <div class="cap">中心＝不在<br>そこから応答が分岐する<br>中心は埋まらない</div>
+  </div>
+</section>
+
+<section id="s-read" class="hidden fade">
+  <div class="head-row">
+    <h2 id="read-title"></h2>
+    <span class="tag">［規約］この読みは未検証</span>
+  </div>
+  <div id="read-blocks"></div>
+  <div id="read-next" style="border-top:1px solid var(--rule);padding-top:30px">
+    <p class="soft" style="margin-bottom:24px">当たっているように読めるかどうかは、まだ何の証拠でもありません。なぜこう言えるのかを、次に出します。</p>
+    <button id="btn-ground">なぜこう言えるのか</button>
+  </div>
+  <div id="run2" class="run hidden" style="border-top:1px solid var(--rule);padding-top:34px">
+    <span id="mark2"></span>
+    <div class="cap">素朴な説明を立てる<br>そこで説明できない事実を探す</div>
+  </div>
+</section>
+
+<section id="s-ground" class="hidden fade">
+  <div class="head-row">
+    <h2>なぜこう言えるのか</h2>
+    <span class="tag">［規約］効果は実証されていない</span>
+  </div>
+  <div id="ground-blocks"></div>
+  <div class="box">
+    <div class="eyebrow">反証条件</div>
+    <p id="g-falsifier" style="font-size:14.5px;line-height:2"></p>
+  </div>
+  <div style="margin-top:44px">
+    <div class="eyebrow">付け替えられる箇所</div>
+    <p id="g-transform" style="font-size:15px;line-height:2;margin-bottom:14px"></p>
+    <p class="note">これは改善策ではありません。この体系は「こうすれば解決する」を供給しない設計です。解決を渡した時点で、それは不在を別の問いにすり替える構造になります。</p>
+  </div>
+  <div style="border-top:1px solid var(--rule);padding-top:30px;margin-top:40px">
+    <div class="eyebrow">外れている箇所を教えてください</div>
+    <p id="g-question" style="font-size:16px;line-height:1.9;margin-bottom:18px;font-weight:500"></p>
+    <textarea id="miss" rows="4" placeholder="どこが違いますか。実際にはこうだ、という箇所を書いてください。"></textarea>
+    <div style="margin-top:26px"><button id="btn-judge">次は、あなたが判定する</button></div>
+  </div>
+</section>
+
+<section id="s-judge" class="hidden fade">
+  <div class="eyebrow">反転</div>
+  <h2 style="margin-bottom:18px">観察する側に回ってください</h2>
+  <p style="font-size:14.5px;line-height:2;max-width:580px;margin-bottom:12px">ここから先は、あなたが判定します。判定するのは<strong>形式</strong>だけで、企業でも人でもありません。</p>
+  <p style="font-size:14.5px;line-height:2;max-width:580px;margin-bottom:8px">問いはひとつです。<strong>それは「終わった」と言える地点を供給しますか。</strong></p>
+  <p class="note" style="margin-bottom:34px">正解は用意していません。ここで見ているのは、あなたの答えが他の人の答えと一致するかどうかだけです。</p>
+  <div id="items"></div>
+  <div style="border-top:1px solid var(--rule);padding-top:28px">
+    <div id="count" style="font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--gray);margin-bottom:20px"></div>
+    <button id="btn-copy" disabled>回答を書き出す</button>
+    <p class="note" style="margin-top:18px">書き出したテキストを渡してもらえれば、他の人の判定と突き合わせます。名前も連絡先も要りません。</p>
+  </div>
+  <div style="margin-top:60px;display:flex;justify-content:center;opacity:.5"><span id="mark3"></span></div>
+</section>
+
+</div>
+
+<script>
+const WORKER = "https://os-worry.oltec-shota.workers.dev";
+
+const ITEMS = [
+  { id:"f01", text:"年会費制のフィットネスクラブの、入会契約そのもの" },
+  { id:"f02", text:"庭木の剪定作業そのもの" },
+  { id:"f03", text:"資格試験に合格し、合格証が発行されること" },
+  { id:"f04", text:"生命保険の契約が締結されること" },
+  { id:"f05", text:"毎週続けられるパーソナルトレーニングの一回分" },
+  { id:"f06", text:"墓石を購入し、設置すること" }
+];
+
+const state = { job:"", read:null, ground:null, verdicts:{}, started:new Date().toISOString() };
+const $ = (id) => document.getElementById(id);
+const show = (el) => el.classList.remove("hidden");
+const hide = (el) => el.classList.add("hidden");
+
+function mark(size, active){
+  const rays = 8;
+  let lines = "";
+  for(let i=0;i<rays;i++){
+    const a = (i/rays)*Math.PI*2 - Math.PI/2;
+    const x1 = 60+Math.cos(a)*14, y1 = 60+Math.sin(a)*14;
+    const x2 = 60+Math.cos(a)*54, y2 = 60+Math.sin(a)*54;
+    const st = active ? "animation:ray 2200ms " + (i*110) + "ms infinite ease-in-out" : "";
+    lines += '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="var(--ink)" stroke-width="1" stroke-dasharray="42" opacity="'+(active?1:.28)+'" style="'+st+'"/>';
+  }
+  return '<svg class="mark" width="'+size+'" height="'+size+'" viewBox="0 0 120 120" aria-hidden="true" style="display:block;overflow:visible">'+lines+'<circle cx="60" cy="60" r="11" fill="none" stroke="var(--ink)" stroke-width="1.25"/></svg>';
+}
+$("mark1").innerHTML = mark(112,true);
+$("mark2").innerHTML = mark(84,true);
+$("mark3").innerHTML = mark(72,false);
+
+async function ask(payload){
+  const r = await fetch(WORKER, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify(payload)
+  });
+  if(!r.ok) throw new Error("http "+r.status);
+  const d = await r.json();
+  if(d.error) throw new Error(d.error);
+  return d;
+}
+function fail(msg){ const e = $("err"); e.textContent = msg; show(e); }
+function clearFail(){ hide($("err")); }
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function blocks(target, pairs){
+  target.innerHTML = pairs
+    .filter(function(p){ return p[1] && String(p[1]).trim(); })
+    .map(function(p){ return '<div class="block"><div class="lab">'+p[0]+'</div><div class="bd">'+escapeHtml(p[1])+'</div></div>'; })
+    .join("");
+}
+
+$("job").addEventListener("input", function(e){ $("btn-run").disabled = !e.target.value.trim(); });
+$("job").addEventListener("keydown", function(e){ if(e.key === "Enter") run(); });
+$("btn-run").addEventListener("click", run);
+
+async function run(){
+  const j = $("job").value.trim();
+  if(!j) return;
+  state.job = j;
+  clearFail();
+  $("btn-run").disabled = true;
+  $("btn-run").textContent = "解析中";
+  $("job").disabled = true;
+  show($("run1"));
+  try{
+    state.read = await ask({ phase:"read", job:j });
+    hide($("s-input"));
+    $("read-title").textContent = j + "という仕事の形式";
+    blocks($("read-blocks"), [
+      ["表層", state.read.surface],
+      ["供給物", state.read.supply],
+      ["層別", state.read.layer],
+      ["継送", state.read.keiso],
+      ["来歴", state.read.provenance]
+    ]);
+    show($("s-read"));
+    window.scrollTo({ top:0, behavior:"smooth" });
+  }catch(err){
+    hide($("run1"));
+    $("job").disabled = false;
+    $("btn-run").disabled = false;
+    $("btn-run").textContent = "解析する";
+    fail("記述を生成できませんでした。通信を確認して、もう一度実行してください。");
+  }
+}
+
+$("btn-ground").addEventListener("click", async function(){
+  hide($("read-next"));
+  show($("run2"));
+  try{
+    state.ground = await ask({ phase:"ground", job:state.job, reading:state.read });
+    hide($("run2"));
+    blocks($("ground-blocks"), [
+      ["素朴な説明", state.ground.naive],
+      ["説明の残余", state.ground.residue],
+      ["この読みなら", state.ground.grounds]
+    ]);
+    $("g-falsifier").textContent = state.ground.falsifier || "";
+    $("g-transform").textContent = state.ground.transform || "";
+    $("g-question").textContent = state.ground.question || "";
+    show($("s-ground"));
+    $("s-ground").scrollIntoView({ behavior:"smooth", block:"start" });
+  }catch(err){
+    hide($("run2"));
+    show($("read-next"));
+    fail("根拠を生成できませんでした。もう一度実行してください。");
+  }
+});
+
+$("btn-judge").addEventListener("click", function(){
+  renderItems();
+  show($("s-judge"));
+  $("s-judge").scrollIntoView({ behavior:"smooth", block:"start" });
+  $("btn-judge").disabled = true;
+});
+
+function renderItems(){
+  $("items").innerHTML = ITEMS.map(function(it,i){
+    return '<div class="item"><div><span class="n">'+String(i+1).padStart(2,"0")+'</span><span class="t">'+it.text+'</span></div>'
+      + '<div class="choices"><button data-id="'+it.id+'" data-v="supplies">供給する</button>'
+      + '<button data-id="'+it.id+'" data-v="not">供給しない</button></div></div>';
+  }).join("");
+  $("items").querySelectorAll("button").forEach(function(b){
+    b.addEventListener("click", function(){
+      state.verdicts[b.dataset.id] = b.dataset.v;
+      $("items").querySelectorAll('button[data-id="'+b.dataset.id+'"]').forEach(function(x){
+        x.classList.toggle("on", x === b);
+      });
+      updateCount();
+    });
+  });
+  updateCount();
+}
+function updateCount(){
+  const n = Object.keys(state.verdicts).length;
+  $("count").textContent = n + " / " + ITEMS.length + " 判定済み";
+  $("btn-copy").disabled = n === 0;
+}
+
+$("btn-copy").addEventListener("click", async function(){
+  const rec = {
+    session: state.started,
+    job: state.job,
+    reading: state.read,
+    grounds: state.ground,
+    off_target_note: $("miss").value.trim(),
+    verdicts: ITEMS.map(function(i){ return { id:i.id, item:i.text, verdict: state.verdicts[i.id] || null }; })
+  };
+  const t = JSON.stringify(rec, null, 2);
+  try{
+    await navigator.clipboard.writeText(t);
+  }catch(e){
+    const ta = document.createElement("textarea");
+    ta.value = t; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); document.body.removeChild(ta);
+  }
+  $("btn-copy").textContent = "コピーしました";
+  setTimeout(function(){ $("btn-copy").textContent = "回答を書き出す"; }, 2200);
+});
+</script>
+</body>
+</html>
