@@ -33,9 +33,16 @@ textarea{width:100%;background:transparent;border:1px solid var(--rule);font-fam
 button{font-family:var(--mono);font-size:12px;letter-spacing:.16em;padding:14px 26px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);cursor:pointer;border-radius:0}
 button[disabled]{background:transparent;color:var(--gray);border-color:var(--rule);cursor:default}
 button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
-.block{border-top:1px solid var(--rule);padding:22px 0 24px;display:grid;grid-template-columns:minmax(78px,104px) 1fr;gap:20px;align-items:start}
-.block .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--gray);padding-top:4px}
+.block{border-top:1px solid var(--rule);padding:22px 0 24px;display:grid;grid-template-columns:minmax(104px,132px) 1fr;gap:20px;align-items:start}
+.block .lab{font-family:var(--sans);font-size:12px;letter-spacing:.04em;line-height:1.8;color:var(--gray);padding-top:5px;white-space:pre-line}
 .block .bd{font-size:15px;line-height:2;letter-spacing:.02em}
+details.eg{margin-top:16px;border-top:1px dotted var(--rule);padding-top:12px}
+details.eg summary{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--gray);cursor:pointer;list-style:none;padding:3px 0}
+details.eg summary::-webkit-details-marker{display:none}
+details.eg summary::before{content:"▸ "}
+details.eg[open] summary::before{content:"▾ "}
+details.eg .egbody{font-size:14px;line-height:2;margin-top:12px}
+details.eg .egnote{font-size:11.5px;line-height:1.9;color:var(--gray);margin-top:12px}
 .box{border:1px solid var(--ink);padding:22px 24px;margin-top:26px}
 .note{font-size:12.5px;line-height:2;color:var(--gray);max-width:560px}
 .soft{font-size:13.5px;line-height:2;color:var(--gray);max-width:560px}
@@ -51,7 +58,7 @@ section{margin-bottom:56px}
 .hidden{display:none}
 @media (max-width:560px){
   .block{grid-template-columns:1fr;gap:8px}
-  .block .lab{padding-top:0}
+  .block .lab{padding-top:0;white-space:normal}
   .item{grid-template-columns:1fr}
   h1{font-size:22px}
   input.job{font-size:19px}
@@ -94,7 +101,7 @@ section{margin-bottom:56px}
   </div>
   <div id="run2" class="run hidden" style="border-top:1px solid var(--rule);padding-top:34px">
     <span id="mark2"></span>
-    <div class="cap">素朴な説明を立てる<br>そこで説明できない事実を探す</div>
+    <div class="cap">よく言われる説明を立てる<br>そこで説明できないことを探す</div>
   </div>
 </section>
 
@@ -105,18 +112,19 @@ section{margin-bottom:56px}
   </div>
   <div id="ground-blocks"></div>
   <div class="box">
-    <div class="eyebrow">反証条件</div>
+    <div class="eyebrow">この読みが外れるとしたら</div>
     <p id="g-falsifier" style="font-size:14.5px;line-height:2"></p>
   </div>
   <div style="margin-top:44px">
     <div class="eyebrow">付け替えられる箇所</div>
     <p id="g-transform" style="font-size:15px;line-height:2;margin-bottom:14px"></p>
-    <p class="note">これは改善策ではありません。この体系は「こうすれば解決する」を供給しない設計です。解決を渡した時点で、それは不在を別の問いにすり替える構造になります。</p>
+    <div id="g-transform-eg" style="margin-bottom:18px"></div>
+    <p class="note">これは改善策ではありません。この体系は「こうすれば解決する」を渡さない設計です。解決を渡した時点で、それは問題を別の問いにすり替える構造になります。</p>
   </div>
   <div style="border-top:1px solid var(--rule);padding-top:30px;margin-top:40px">
-    <div class="eyebrow">外れている箇所を教えてください</div>
+    <div class="eyebrow">違うなと思うところはありますか？</div>
     <p id="g-question" style="font-size:16px;line-height:1.9;margin-bottom:18px;font-weight:500"></p>
-    <textarea id="miss" rows="4" placeholder="どこが違いますか。実際にはこうだ、という箇所を書いてください。"></textarea>
+    <textarea id="miss" rows="4" placeholder="どこが違いましたか。実際はこうだ、という箇所を書いてください。"></textarea>
     <div style="margin-top:26px"><button id="btn-judge">次は、あなたが判定する</button></div>
   </div>
 </section>
@@ -125,7 +133,7 @@ section{margin-bottom:56px}
   <div class="eyebrow">反転</div>
   <h2 style="margin-bottom:18px">観察する側に回ってください</h2>
   <p style="font-size:14.5px;line-height:2;max-width:580px;margin-bottom:12px">ここから先は、あなたが判定します。判定するのは<strong>形式</strong>だけで、企業でも人でもありません。</p>
-  <p style="font-size:14.5px;line-height:2;max-width:580px;margin-bottom:8px">問いはひとつです。<strong>それは「終わった」と言える地点を供給しますか。</strong></p>
+  <p style="font-size:14.5px;line-height:2;max-width:580px;margin-bottom:8px">問いはひとつです。<strong>それは「終わった」と言える地点を与えますか。</strong></p>
   <p class="note" style="margin-bottom:34px">正解は用意していません。ここで見ているのは、あなたの答えが他の人の答えと一致するかどうかだけです。</p>
   <div id="items"></div>
   <div style="border-top:1px solid var(--rule);padding-top:28px">
@@ -190,10 +198,22 @@ function escapeHtml(s){
     return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
   });
 }
-function blocks(target, pairs){
-  target.innerHTML = pairs
-    .filter(function(p){ return p[1] && String(p[1]).trim(); })
-    .map(function(p){ return '<div class="block"><div class="lab">'+p[0]+'</div><div class="bd">'+escapeHtml(p[1])+'</div></div>'; })
+
+function egHtml(text){
+  if(!text || !String(text).trim()) return "";
+  return '<details class="eg"><summary>たとえば</summary>'
+    + '<div class="egbody">' + escapeHtml(text) + '</div>'
+    + '<div class="egnote">これは説明のための例です。当たっているかどうかではありません。</div>'
+    + '</details>';
+}
+
+function blocks(target, rows){
+  target.innerHTML = rows
+    .filter(function(r){ return r[1] && String(r[1]).trim(); })
+    .map(function(r){
+      return '<div class="block"><div class="lab">'+r[0]+'</div>'
+        + '<div class="bd">'+escapeHtml(r[1])+egHtml(r[2])+'</div></div>';
+    })
     .join("");
 }
 
@@ -215,11 +235,11 @@ async function run(){
     hide($("s-input"));
     $("read-title").textContent = j + "という仕事の形式";
     blocks($("read-blocks"), [
-      ["表層", state.read.surface],
-      ["供給物", state.read.supply],
-      ["層別", state.read.layer],
-      ["継送", state.read.keiso],
-      ["来歴", state.read.provenance]
+      ["売っていることに\nなっているもの", state.read.surface, null],
+      ["実際に\n売っているもの", state.read.supply, state.read.supply_eg],
+      ["契約と現場の\nズレ", state.read.layer, state.read.layer_eg],
+      ["前回が今回を\n決めている", state.read.keiso, state.read.keiso_eg],
+      ["どこに値打ちが\nあるか", state.read.provenance, state.read.provenance_eg]
     ]);
     show($("s-read"));
     window.scrollTo({ top:0, behavior:"smooth" });
@@ -239,12 +259,13 @@ $("btn-ground").addEventListener("click", async function(){
     state.ground = await ask({ phase:"ground", job:state.job, reading:state.read });
     hide($("run2"));
     blocks($("ground-blocks"), [
-      ["素朴な説明", state.ground.naive],
-      ["説明の残余", state.ground.residue],
-      ["この読みなら", state.ground.grounds]
+      ["よく言われる\n説明", state.ground.naive, null],
+      ["それでは説明\nできないこと", state.ground.residue, null],
+      ["この見方なら\n説明がつく", state.ground.grounds, state.ground.grounds_eg]
     ]);
     $("g-falsifier").textContent = state.ground.falsifier || "";
     $("g-transform").textContent = state.ground.transform || "";
+    $("g-transform-eg").innerHTML = egHtml(state.ground.transform_eg);
     $("g-question").textContent = state.ground.question || "";
     show($("s-ground"));
     $("s-ground").scrollIntoView({ behavior:"smooth", block:"start" });
@@ -265,8 +286,8 @@ $("btn-judge").addEventListener("click", function(){
 function renderItems(){
   $("items").innerHTML = ITEMS.map(function(it,i){
     return '<div class="item"><div><span class="n">'+String(i+1).padStart(2,"0")+'</span><span class="t">'+it.text+'</span></div>'
-      + '<div class="choices"><button data-id="'+it.id+'" data-v="supplies">供給する</button>'
-      + '<button data-id="'+it.id+'" data-v="not">供給しない</button></div></div>';
+      + '<div class="choices"><button data-id="'+it.id+'" data-v="supplies">与える</button>'
+      + '<button data-id="'+it.id+'" data-v="not">与えない</button></div></div>';
   }).join("");
   $("items").querySelectorAll("button").forEach(function(b){
     b.addEventListener("click", function(){
