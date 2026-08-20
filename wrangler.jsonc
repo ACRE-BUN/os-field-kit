@@ -1,0 +1,5 @@
+{
+  "name": "osdemo",
+  "compatibility_date": "2026-08-20",
+  "main": "workers/worker.js"
+}

@@ -5,7 +5,7 @@
    ・受け付けるのは決まった2種類のリクエストだけ（汎用プロキシとして使われない）
 
    デプロイ:
-     npx wrangler deploy workers/worker.js --name os-worry
+     npx wrangler deploy workers/worker.js --name osdemo
 ------------------------------------------------------------------ */
 
 const ALLOW = [
